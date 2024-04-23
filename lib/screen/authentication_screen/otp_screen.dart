@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 import '../dashboard/dashboard.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -170,10 +171,32 @@ class _OtpScreenState extends State<OtpScreen> {
         loginApi();
       }
   }
-
+  final HttpClientServices clientRequest=HttpClientServices();
   void loginApi()async{
-    var res=await httpServices.loginApi(number: widget.number.toString(), otp: otpController.text.trim().toString());
-    if(res!.success==true)
+    var prefs=await SharedPreferences.getInstance();
+    var res;
+    if(prefs.get('login_type').toString()=="client")
+    {
+      res=await clientRequest.loginApi(number: widget.number.toString(), otp: otpController.text.trim().toString());
+      if(res!.success==true)
+      {
+        final prefs=await SharedPreferences.getInstance();
+        setState(() {
+          Fluttertoast.showToast(msg: res.message.toString());
+          PrefManager.clientUserDataSave(res);
+          prefs.setString('user_token', res.token.toString());
+          Get.offAll(const DashBoard());
+        });
+      }
+      else
+      {
+        Fluttertoast.showToast(msg: res.message.toString());
+      }
+    }
+    else
+    {
+      res=await httpServices.loginApi(number: widget.number.toString(), otp: otpController.text.trim().toString());
+      if(res!.success==true)
       {
         final prefs=await SharedPreferences.getInstance();
         setState(() {
@@ -183,10 +206,12 @@ class _OtpScreenState extends State<OtpScreen> {
           Get.offAll(const DashBoard());
         });
       }
-    else
+      else
       {
         Fluttertoast.showToast(msg: res.message.toString());
       }
+    }
+
   }
 
 }

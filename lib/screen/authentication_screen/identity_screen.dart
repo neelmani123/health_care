@@ -9,6 +9,7 @@ import 'package:health_care/common/custom_ui.dart';
 import 'package:health_care/screen/authentication_screen/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentityScreen extends StatefulWidget {
   const IdentityScreen({super.key});
@@ -50,42 +51,62 @@ class _IdentityScreenState extends State<IdentityScreen> {
 
 
 
+  String type="patient";
+
 
   Widget loginType()
   {
     return Row(
       children: [
-        Expanded(child: Padding(
-          padding: const EdgeInsets.only(top: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
+        Expanded(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap:()async{
+                var prefs=await SharedPreferences.getInstance();
+                setState(() {
+                  type="client";
+                  prefs.setString('login_type', type.toString());
+                });
+              },
+              child: Container(
                 height: 20.h,
                 width: 120,
-                decoration: BoxDecoration(
-                 // borderRadius: BorderRadius.circular(10),
+                decoration:  BoxDecoration(
+                 border: Border.all(color: type=="client"?AppColors.primaryColor:AppColors.whiteColor,width: 2),
                   shape: BoxShape.rectangle,
-                  image: DecorationImage(image: AssetImage(AppImages.dialysisIcon),fit: BoxFit.cover)
+                  image: const DecorationImage(image: AssetImage(AppImages.dialysisIcon),fit: BoxFit.fitHeight)
                 ),
-              ),
 
-             DesignConfig.space(h: 1.h),
-             CustomText(text:  AppStrings.dialysis,fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.blackColor,)
-            ],
-          ),
+              ),
+            ),
+
+           DesignConfig.space(h: 1.h),
+           CustomText(text:  AppStrings.dialysis,fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.blackColor,)
+          ],
         )),
         DesignConfig.space(w: 1.w),
         Expanded(child: Column(
           children: [
-            Container(
-              height: 20.h,
-              width: 120,
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.circular(10),
-                  shape: BoxShape.rectangle,
-                  image: DecorationImage(image: AssetImage(AppImages.patientIcon),fit: BoxFit.cover)
+            InkWell(
+              onTap:()async{
+                var prefs=await SharedPreferences.getInstance();
+                setState(() {
+                  type="patient";
+                  prefs.setString('login_type', type.toString());
+
+                });
+              },
+              child: Container(
+                height: 20.h,
+                width: 120,
+                decoration:  BoxDecoration(
+                 border: Border.all(color: type=="patient"?AppColors.primaryColor:AppColors.whiteColor,width: 2),
+                    shape: BoxShape.rectangle,
+                    image: const DecorationImage(image: AssetImage(AppImages.patientIcon),fit: BoxFit.cover)
+                ),
+
               ),
             ),
             DesignConfig.space(h: 1.h),

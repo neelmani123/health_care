@@ -17,11 +17,16 @@ class AppStrings
 static const myBooking="My bookings";
 static const myWishlist="My Wishlist";
 static const myPres="My prescriptions";
+static const clientMyPres="Patient Prescription";
 static const myLab="My lab test reports";
+static const clientMyLab="Patient lab test reports";
 static const doctorCons="Doctor Consultation";
+static const clientDoctorCons="Patient Medical Records";
 static const myInq="My inquired products";
+static const yourAddress="Your Address";
 static const nextDial="Next Dialysis Reminder";
 static const giveFeed="Give Feedback";
 static const invite="Invites Friends";
 static const logout="Log out";
+static const myOrder="My Order";
 }

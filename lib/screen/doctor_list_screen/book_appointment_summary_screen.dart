@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:health_care/screen/my_booking_screen/successful_appointment_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../common/app_bar.dart';
@@ -23,6 +24,8 @@ class _BookAppointmnetSummaryScreenState extends State<BookAppointmnetSummaryScr
     if(res!.result==true)
     {
       setState(() {
+        Fluttertoast.showToast(msg: res.message.toString());
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>SuccessfulAppointment()));
 
       });
     }
@@ -108,12 +111,7 @@ class _BookAppointmnetSummaryScreenState extends State<BookAppointmnetSummaryScr
                           const Icon(Icons.heart_broken),
                         ],
                       ),
-                      CustomText(
-                        text: widget.bio.toString(),
-                        color: const Color(0xFF677294),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      CustomUi.htmlText(widget.bio.toString())
                     ],
                   )),
             ],

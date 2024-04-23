@@ -11,21 +11,21 @@ import 'package:health_care/screen/my_booking_screen/my_booking_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import '../../common/pref_manager.dart';
+import '../../models/profile_model/client_profile_model.dart';
 import '../../models/profile_model/profile_model.dart';
-import '../authentication_screen/login_screen.dart';
 import '../my_booking_screen/my_wish_list_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ClientProfileScreen extends StatefulWidget {
+  const ClientProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ClientProfileScreen> createState() => _ClientProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  ProfileUser user=ProfileUser();
+class _ClientProfileScreenState extends State<ClientProfileScreen> {
+  CleintUser user=CleintUser();
   getUserData()async{
-    await PrefManager.getprofileData().then((value) => {
+    await PrefManager.getClientprofileData().then((value) => {
       setState((){
         user=value.user!;
       })
@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           Row(
             children: [
-               CircleAvatar(
+              CircleAvatar(
                 radius: 50,
                 backgroundColor: const Color(0xFFBFB5FF),
                 child: CircleAvatar(
@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     CustomText(text: user.email==null?"":user.email,fontWeight: FontWeight.w400,fontSize: 11,color: Color(0xFF828488),),
                     DesignConfig.space(h: 7),
-                    CustomText(text: 'Registered Since ${user.registered_at.toString()}',fontWeight: FontWeight.w400,fontSize: 13,color:AppColors.whiteColor,),
+                    CustomText(text: 'Registered Since ${user.registeredAt.toString()}',fontWeight: FontWeight.w400,fontSize: 13,color:AppColors.whiteColor,),
                   ],
                 ),
               ),
@@ -127,11 +127,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             child: Row(
               children: [
-                SvgPicture.asset('assets/drawer/icon7.svg'),
+                SvgPicture.asset('assets/drawer/myBooking.svg'),
                 DesignConfig.space(w: 20),
                 Expanded(
-                  flex: 2,
-                    child: CustomText(text: AppStrings.myBooking,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,))
+                    flex: 2,
+                    child: CustomText(text: AppStrings.myOrder,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,))
               ],
             ),
           ),
@@ -147,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SvgPicture.asset('assets/drawer/icon8.svg'),
                 DesignConfig.space(w: 20),
                 Expanded(
-                  flex: 2,
+                    flex: 2,
                     child: CustomText(text: AppStrings.myWishlist,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,))
               ],
             ),
@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               SvgPicture.asset('assets/drawer/icon6.svg'),
               DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.myPres,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              CustomText(text: AppStrings.clientMyPres,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
             ],
           ),
           DesignConfig.space(h: 2.h),
@@ -169,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               SvgPicture.asset('assets/drawer/icon5.svg'),
               DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.myLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              CustomText(text: AppStrings.clientMyLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
             ],
           ),
           DesignConfig.space(h: 2.h),
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               SvgPicture.asset('assets/drawer/icon9.svg'),
               DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.doctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              CustomText(text: AppStrings.clientDoctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
             ],
           ),
           DesignConfig.space(h: 2.h),
@@ -191,29 +191,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               SvgPicture.asset('assets/drawer/Icon1.svg'),
               DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.myInq,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              CustomText(text: AppStrings.yourAddress,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
             ],
           ),
-          DesignConfig.space(h: 2.h),
-          DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
-          DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon4.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.nextDial,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
-          ),
-          DesignConfig.space(h: 2.h),
-          DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
-          DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon3.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.giveFeed,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
-          ),
+
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
@@ -254,31 +235,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
       margin: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Color(0xFFADEAFF)
+          borderRadius: BorderRadius.circular(20),
+          color: Color(0xFFADEAFF)
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           InkWell(
-            onTap: (){
-              Get.to(CmsProfile(appText: 'about',));
-            },
+              onTap: (){
+                Get.to(CmsProfile(appText: 'about',));
+              },
               child: CustomText(text: 'About Us',fontWeight: FontWeight.w600,fontSize: 15,color: Color(0xFF151921),)),
           dottedWidget(),
           InkWell(
-            onTap: (){
-             Get.to(CmsProfile(appText: 'privacy',));
-            },
+              onTap: (){
+                Get.to(CmsProfile(appText: 'privacy',));
+              },
               child: CustomText(text: 'Privacy Policy',fontWeight: FontWeight.w600,fontSize: 15,color: Color(0xFF151921),)),
           // DesignConfig.space(h: 1.h),
           dottedWidget(),
           // DesignConfig.space(h: 0.5.h),
           InkWell(
-            onTap: (){
-              Get.to(CmsProfile(appText: 'terms',));
-            },
+              onTap: (){
+                Get.to(CmsProfile(appText: 'terms',));
+              },
               child: CustomText(text: 'Terms and Conditions',fontWeight: FontWeight.w600,fontSize: 15,color: Color(0xFF151921),)),
 
         ],

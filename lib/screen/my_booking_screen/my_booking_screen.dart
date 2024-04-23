@@ -7,6 +7,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
+import '../../common/http_client_request.dart';
+import '../../common/pref_manager.dart';
 import '../../models/doctor_list_model/my_booking_model.dart';
 
 class MyBookingScreen extends StatefulWidget {
@@ -20,9 +22,18 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   late TabController tabController;
   List<Appointments> appointments=[];
   final HttpServices httpServices=HttpServices();
+  var loginType;
+  final HttpClientServices httpClientServices = HttpClientServices();
 
   void myAppointmentApi(String type)async {
-    var res = await httpServices.myAppointmentApi(status: type);
+
+    var res;
+    if(loginType=="client"){
+      //res = await httpClientServices.myAppointmentApi(status: type);
+    }
+    else{
+      res = await httpServices.myAppointmentApi(status: type);
+    }
     if (res!.result == true)
   {
     setState(() {
@@ -38,6 +49,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   void initState() {
     // TODO: implement initState
     tabController = TabController(length: 2, vsync: this);
+    PrefManager.getLoginUserTypeValue().then((value){
+      setState(() {
+        loginType=value;
+      });
+    });
     myAppointmentApi('pending');
     super.initState();
   }

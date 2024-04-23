@@ -8,22 +8,22 @@ import '../screen/authentication_screen/login_screen.dart';
 
 
 
-class ApiBaseHelper
+class ApiBaseClient
 {
-  String aPPmAINuRL = "https://api.kidneymitr.com/api/v1/";
+
   String appDoctorMainUrl="https://client.kidneymitr.com/api/v1/";
   PrefManager prefManager=PrefManager();
 
-   Future<String> getToken() async {
+  Future<String> getToken() async {
     var token="";
-    await PrefManager.getUserData().then((value) => {
+    await PrefManager.getClientUserData().then((value) => {
       debugPrint("Token------------>${value.token}",wrapWidth: 5000),
       token= value.token!,
     });
     return token;
   }
 
-   Future <Map<String, String>> getDefaultHeadersToken() async{
+  Future <Map<String, String>> getDefaultHeadersToken() async{
     var token=await getToken();
     Map<String, String> defaultHeaders = {
       "Content-Type": "application/json",
@@ -37,10 +37,10 @@ class ApiBaseHelper
   Future<dynamic> postApi(String url, Map<String, dynamic> reqBody) async {
     var responseJson;
     debugPrint("data==>$reqBody", wrapWidth: 1024);
-    debugPrint("data==>$aPPmAINuRL$url");
+    debugPrint("data==>$appDoctorMainUrl$url");
 
     final response = await http
-        .post(Uri.parse(aPPmAINuRL + url), body: jsonEncode(reqBody), headers: {
+        .post(Uri.parse(appDoctorMainUrl + url), body: jsonEncode(reqBody), headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
     });
     debugPrint("data==>${response.body}", wrapWidth: 1024);
@@ -62,9 +62,9 @@ class ApiBaseHelper
     });
     var responseJson;
     debugPrint("data==>$reqBody", wrapWidth: 1024);
-    debugPrint("data==>$aPPmAINuRL$url");
+    debugPrint("data==>$appDoctorMainUrl$url");
     debugPrint("data==>$headers");
-    final response=await http.get(Uri.parse(aPPmAINuRL+url),headers: headers);
+    final response=await http.get(Uri.parse(appDoctorMainUrl+url),headers: headers);
     try {
       responseJson = _returnResponse(response);
       return responseJson;
@@ -85,9 +85,9 @@ class ApiBaseHelper
     });
     var responseJson;
     debugPrint("data==>$reqBody", wrapWidth: 1024);
-    debugPrint("Url==>$aPPmAINuRL$url");
+    debugPrint("Url==>$appDoctorMainUrl$url");
     debugPrint("Heards==>$headers");
-    final response=await http.post(Uri.parse(aPPmAINuRL+url),headers: headers,body: jsonEncode(reqBody));
+    final response=await http.post(Uri.parse(appDoctorMainUrl+url),headers: headers,body: jsonEncode(reqBody));
     try {
       debugPrint("Response is=========>${response.body}",wrapWidth: 1024);
       responseJson = _returnResponse(response);

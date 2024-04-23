@@ -242,6 +242,7 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
         }
       updateProfile();
 
+
     });
   }
 
@@ -258,40 +259,42 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
 
   updateProfile() async {
     var token = await getToken();
-    print("hfjdhfkdshl"+token);
     ApiBaseHelper apiBaseHelper = ApiBaseHelper();
     var baseUrl = "${apiBaseHelper.aPPmAINuRL}upload_prescription";
     var uri = Uri.parse(baseUrl);
-    print("hfjdhfkdshl"+baseUrl);
     var request = http.MultipartRequest(
       "POST",
       uri,
     );
+
     request.headers["authorization"] = "Bearer $token";
     request.fields["type"] = type.toString();
-    request.fields["title"] = '';
-      request.files.add(http.MultipartFile.fromBytes(
-          'file', File(path).readAsBytesSync(),
-          filename: path.toString().split('/').last));
+    request.files.add(http.MultipartFile.fromBytes(
+        'file', await File(_imageFiler!.path).readAsBytesSync(),
+        filename: _imageFiler.toString().split('/').last))
+    ;
     try {
-      debugPrint(jsonEncode("REquest=====>"+request.fields.toString()));
-      http.Response response =
-      await http.Response.fromStream(await request.send());
+      debugPrint("kjhkgkgkgh===>"+jsonEncode(request.toString()));
+      http.Response response = await http.Response.fromStream(await request.send());
+
       if (response.statusCode == 200) {
-        Fluttertoast.showToast(msg: response.body);
-        Get.to(PrescriptionDetailsScreen());
+        print("hfjdsgfmdfjgdfgdjkg=====>${response.body.toString()}");
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("${jsonDecode(response.body)['message']}")));
       } else {
-        print("Error========+++>"+response.body.toString());
+        print("hfjdsgfmdfjgdfgdjkg=====>${response.body.toString()}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("${response.statusCode}"),
           ),
         );
+
       }
     } catch (exception) {
-
       debugPrint("exception:==>$exception");
     }
+
   }
 
   Widget cameraWidget(){

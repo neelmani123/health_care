@@ -5,17 +5,23 @@ import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_images.dart';
 import 'package:health_care/common/custom_text.dart';
+import 'package:health_care/common/custom_ui.dart';
 import 'package:health_care/common/http_request.dart';
 import 'package:health_care/common/pref_manager.dart';
 import 'package:health_care/screen/blogs_screen/blogs_screen.dart';
 import 'package:health_care/screen/dialysis_centre/dialysis_centre_screen.dart';
 import 'package:health_care/screen/home_screen/book_appointment_screen.dart';
+import 'package:health_care/screen/home_screen/qr_scanner_screen.dart';
 import 'package:health_care/screen/upload_records/prescription_details.dart';
 import 'package:health_care/screen/upload_records/upload_records_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../common/http_client_request.dart';
 import '../../models/home_model/home_model.dart';
+import '../dialyis_incharge/dialysis_incharge_screen.dart';
 import '../dialysis_product/dialysis_product_screen.dart';
+import '../my_booking_screen/client_dialysis_appointment.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,9 +31,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  final HttpServices httpServices=HttpServices();
-  bool loading=true;
+  final HttpServices httpServices = HttpServices();
+  bool loading = true;
 
   List<String> dailySisIcon = [
     AppImages.qrCodeIcon,
@@ -37,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppImages.dialysisRecord,
     AppImages.uploadRecordIcon
   ];
-  List<Color> color=[
+  List<Color> color = [
     const Color(0xFFACDDF1),
     const Color(0xFFFDB3B6),
     const Color(0xFFA9B0EC),
@@ -53,6 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
     'Dialysis Record',
     'Upload Report'
   ];
+
+  List<String> clientDialysisTitle = [
+    'Qr Code Scanner',
+    'Dialysis Appointments',
+    'Patient Medical Records',
+    'Buy Dialysis Product',
+    'Upload Prescription',
+    'Upload Report'
+  ];
   List<Color> schoolAcademicColor = [
     const Color(0xFFFFBFDA),
     const Color(0xFFFFAFAC),
@@ -62,39 +76,61 @@ class _HomeScreenState extends State<HomeScreen> {
     const Color(0xFFBBFFCF),
   ];
   HomeData? homeData;
-  Future homeApi()async{
-    var res=await httpServices.homeApi();
-    if(res!.result==true)
-      {
-        setState(() {
-         homeData=res.homeData!;
-         profileApi();
-         loading=false;
-        });
-      }
+  final HttpClientServices httpClientServices = HttpClientServices();
+  var loginType;
 
-    else
-      {
-        Fluttertoast.showToast(msg: res.message.toString());
-      }
+  Future homeApi() async {
+    var prefs = await SharedPreferences.getInstance();
+    var res;
+    if (prefs.get('login_type').toString() == "client") {
+      res = await httpClientServices.homeApi();
+    } else {
+      res = await httpServices.homeApi();
+    }
+
+    if (res!.result == true) {
+      setState(() {
+        homeData = res.homeData!;
+        profileApi();
+        loading = false;
+      });
+    } else {
+      Fluttertoast.showToast(msg: res.message.toString());
+    }
   }
 
-  void profileApi()async{
-    var res=await httpServices.profileApi();
-    if(res!.result==true)
-      {
+  void profileApi() async {
+    var prefs = await SharedPreferences.getInstance();
+    var res;
+    if (prefs.get('login_type').toString() == "client") {
+      res = await httpClientServices.profileApi();
+      if (res!.result == true) {
+        setState(() {
+          PrefManager.clientProfileDataSave(res);
+        });
+      } else {
+        Fluttertoast.showToast(msg: res.message.toString());
+      }
+    } else {
+      res = await httpServices.profileApi();
+      if (res!.result == true) {
         setState(() {
           PrefManager.profileDataSave(res);
         });
-      }
-    else
-      {
+      } else {
         Fluttertoast.showToast(msg: res.message.toString());
       }
+    }
   }
+
   @override
   void initState() {
     // TODO: implement initState
+    PrefManager.getLoginUserTypeValue().then((value){
+      setState(() {
+        loginType=value;
+      });
+    });
     homeApi();
     super.initState();
   }
@@ -102,51 +138,75 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (loading)?const Center(child: CircularProgressIndicator(),):Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: RefreshIndicator(
-          onRefresh: homeApi,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                DesignConfig.space(h: 2.h),
-                searchWidget(),
-                DesignConfig.space(h: 2.h),
-                bannerWidget(),
-                DesignConfig.space(h: 3.h),
-                dialysisWidget(),
-                DesignConfig.space(h: 2.h),
-                bestSelling(),
-                DesignConfig.space(h: 2.h),
-                blogs(),
-              ],
-            ),
+      resizeToAvoidBottomInset: true,
+
+      bottomSheet:InkWell(
+        onTap: (){
+          Get.to(DialysisIncharge());
+        },
+        child: Container(
+          width: 150,
+          height: 35,
+          margin: const EdgeInsets.only(bottom: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: AppColors.primaryColor
           ),
+          child: CustomText(text: 'Start Dialysis',color: AppColors.whiteColor,),
         ),
       ),
+      body: (loading)
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: RefreshIndicator(
+                onRefresh: homeApi,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      DesignConfig.space(h: 2.h),
+                      searchWidget(),
+                      DesignConfig.space(h: 2.h),
+                      bannerWidget(),
+                      DesignConfig.space(h: 3.h),
+                      loginType=="client"?clientDialysisWidget():dialysisWidget(),
+                      DesignConfig.space(h: 2.h),
+                      bestSelling(),
+                      DesignConfig.space(h: 2.h),
+                      blogs(),
+                      DesignConfig.space(h: 2.h),
+                    ],
+                  ),
+                ),
+              ),
+            ),
     );
   }
 
-  Widget bannerWidget(){
+  Widget bannerWidget() {
     return Container(
       height: 15.h,
       width: double.infinity,
       child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: homeData!.banners!.length,
-          itemBuilder: (context,index){
-            return  Container(
-              height:10.h,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: homeData!.banners!.length,
+          itemBuilder: (context, index) {
+            return Container(
+              height: 10.h,
               margin: EdgeInsets.symmetric(horizontal: 10),
-              width: Get.width/1.1,
+              width: Get.width / 1.1,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(image: NetworkImage(homeData!.banners![index].image.toString()),fit: BoxFit.fill)
-                  ),
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          homeData!.banners![index].image.toString()),
+                      fit: BoxFit.fill)),
             );
-
-      }),
+          }),
     );
   }
 
@@ -185,42 +245,89 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: dailySisIcon.length,
         itemBuilder: (contex, index) {
           return InkWell(
-            onTap: (){
-              if(index==0)
-                {
-                  Get.to(PrescriptionDetailsScreen());
-                }
-              else if(index==1)
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>const BookAppointmentScreen()));
-                }
-              else if(index==2)
-                {
-                  Get.to(DialysisCentreScreen());
-                }
-              else if(index==3)
-                {
-                  Get.to(DialysisProductScreen());
-                }
-              else if(index==5)
-                {
-                  Get.to(UploadRecordsScreen());
-                }
+            onTap: () {
+              if (index == 0) {
+                // Get.to(PrescriptionDetailsScreen());
+                Get.to(QrScreenScreen());
+              } else if (index == 1) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const BookAppointmentScreen()));
+              } else if (index == 2) {
+                Get.to(DialysisCentreScreen());
+              } else if (index == 3) {
+                Get.to(DialysisProductScreen());
+              } else if (index == 5) {
+                Get.to(UploadRecordsScreen());
+              }
             },
             child: Column(
               children: [
-               Container(
-                 width: 100,
-                 height: 98,
-                 decoration: BoxDecoration(
-                  // color: color[index],
-                   borderRadius: BorderRadius.circular(10)
-                 ),
-                 child: Image.asset(dailySisIcon[index]),
-               ),
+                Container(
+                  width: 100,
+                  height: 98,
+                  decoration: BoxDecoration(
+                      // color: color[index],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Image.asset(dailySisIcon[index]),
+                ),
                 DesignConfig.space(h: 1.h),
                 CustomText(
                   text: dialysisTitle[index].toString(),
+                  align: TextAlign.center,
+                  color: const Color(0xFF595959),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget clientDialysisWidget() {
+    return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // number of items in each row
+            mainAxisSpacing: 8.0, // spacing between rows
+            crossAxisSpacing: 8.0, // spacing between columns
+            mainAxisExtent: 140),
+        itemCount: dailySisIcon.length,
+        itemBuilder: (contex, index) {
+          return InkWell(
+            onTap: () {
+              if (index == 0) {
+                // Get.to(PrescriptionDetailsScreen());
+                Get.to(QrScreenScreen());
+              } else if (index == 1) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ClientDialysisAppointment()));
+              } else if (index == 2) {
+                Get.to(DialysisCentreScreen());
+              } else if (index == 3) {
+                Get.to(DialysisProductScreen());
+              } else if (index == 5) {
+                Get.to(UploadRecordsScreen());
+              }
+            },
+            child: Column(
+              children: [
+                Container(
+                  width: 100,
+                  height: 98,
+                  decoration: BoxDecoration(
+                      // color: color[index],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Image.asset(dailySisIcon[index]),
+                ),
+                DesignConfig.space(h: 1.h),
+                CustomText(
+                  text: clientDialysisTitle[index].toString(),
                   align: TextAlign.center,
                   color: const Color(0xFF595959),
                   fontSize: 9,
@@ -285,7 +392,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 70,
                         width: 150,
                         decoration: BoxDecoration(
-                           image: DecorationImage(image: NetworkImage(homeData!.bestSelling![index].image.toString()),fit: BoxFit.cover),
+                            image: DecorationImage(
+                                image: NetworkImage(homeData!
+                                    .bestSelling![index].image
+                                    .toString()),
+                                fit: BoxFit.cover),
                             borderRadius: BorderRadius.circular(6)),
                       ),
                       DesignConfig.space(h: 1.h),
@@ -307,7 +418,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: AppColors.yellowColor, size: 18),
                               DesignConfig.space(w: 5),
                               CustomText(
-                                text: homeData!.bestSelling![index].ratings.toString(),
+                                text: homeData!.bestSelling![index].ratings
+                                    .toString(),
                                 color: const Color(0xFF333333),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -335,14 +447,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: AppColors.primaryColor,
                                 ),
                               ),
-                              homeData!.bestSelling![index].is_wishlist==1?Image.asset(
-                                'assets/images/heart_fill.png',
-                                height: 15,
-                              ):
-                              Image.asset(
-                                'assets/images/heart.png',
-                                height: 15,
-                              )
+                              homeData!.bestSelling![index].is_wishlist == 1
+                                  ? Image.asset(
+                                      'assets/images/heart_fill.png',
+                                      height: 15,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/heart.png',
+                                      height: 15,
+                                    )
                             ],
                           )),
                     ],
@@ -367,8 +480,10 @@ class _HomeScreenState extends State<HomeScreen> {
               color: const Color(0xFF333333),
             ),
             InkWell(
-              onTap: (){
-                Get.to(BlogScreen(navigatePage: "home",));
+              onTap: () {
+                Get.to(BlogScreen(
+                  navigatePage: "home",
+                ));
               },
               child: CustomText(
                 text: 'See all',
@@ -412,7 +527,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 70,
                         width: 200,
                         decoration: BoxDecoration(
-                          image: DecorationImage(image: NetworkImage(homeData!.blogs![index].image.toString()),fit: BoxFit.cover),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    homeData!.blogs![index].image.toString()),
+                                fit: BoxFit.cover),
                             borderRadius: BorderRadius.circular(6)),
                       ),
                       DesignConfig.space(h: 1.h),
@@ -429,8 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6),
                         child: CustomText(
-                          text:
-                          homeData!.blogs![index].description.toString(),
+                          text: homeData!.blogs![index].description.toString(),
                           color: const Color(0xFF677294),
                           fontSize: 13,
                           fontWeight: FontWeight.w300,

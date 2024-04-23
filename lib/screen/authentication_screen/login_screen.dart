@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,7 +12,9 @@ import 'package:health_care/screen/authentication_screen/otp_screen.dart';
 import 'package:health_care/screen/authentication_screen/signup_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,8 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  final HttpClientServices clientRequest=HttpClientServices();
+
   void sendOtpApi()async{
-    var res=await httpServices.sendOtpAPi(mobileNumber: numberController.text.trim().toString());
+  var prefs=await SharedPreferences.getInstance();
+  print("sjhgfjdgfgdgjf===>"+prefs.get('login_type').toString());
+  var res;
+  if(prefs.get('login_type').toString()=="client")
+    {
+      res=await clientRequest.sendOtpAPi(mobileNumber: numberController.text.trim().toString());
+    }
+  else
+    {
+       res=await httpServices.sendOtpAPi(mobileNumber: numberController.text.trim().toString());
+    }
+
     if(res!.result==true)
       {
         setState(() {

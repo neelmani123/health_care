@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/models/blogs_model/blogs_model.dart';
+import 'package:health_care/models/generate_qr/generate_qr_model.dart';
 import 'package:health_care/models/home_model/home_model.dart';
 import 'package:health_care/models/profile_model/profile_model.dart';
 import 'package:health_care/models/profile_model/settings_model.dart';
@@ -299,6 +300,22 @@ class HttpServices {
     final response=await helper.postBearerApi('my_wishlist', reqBody);
     try{
       return MyWishListModel.fromJson(response);
+    }
+    catch(e)
+    {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<GenerateQrModel?>generateQrApi()async{
+    Map<String, dynamic> reqBody = {
+
+
+    };
+
+    final response=await helper.postBearerApi('generate_qr', reqBody);
+    try{
+      return GenerateQrModel.fromJson(response);
     }
     catch(e)
     {
