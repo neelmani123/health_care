@@ -7,6 +7,8 @@ import 'package:health_care/common/http_request.dart';
 import 'package:health_care/screen/blogs_screen/blogs_details.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../common/http_client_request.dart';
 import '../../models/blogs_model/blogs_model.dart';
 
 class BlogScreen extends StatefulWidget {
@@ -19,11 +21,22 @@ class BlogScreen extends StatefulWidget {
 
 class _BlogScreenState extends State<BlogScreen> {
   final HttpServices httpServices=HttpServices();
+  final HttpClientServices clientRequest=HttpClientServices();
   List<Blogs> blogs=[];
   bool loading=true;
 
   void blogsApi()async{
-    var res=await httpServices.blogsApi();
+    var prefs=await SharedPreferences.getInstance();
+    var res;
+
+    if(prefs.get('login_type').toString()=="client")
+    {
+      res=await clientRequest.blogsApi();
+    }
+    else
+      {
+        res=await httpServices.blogsApi();
+      }
     if(res!.result==true)
       {
         setState(() {

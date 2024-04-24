@@ -51,6 +51,7 @@ class Appointments {
   var lastDialysisDate;
   var image;
   var userName;
+  var isExpanded;
 
   Appointments(
       {this.id,

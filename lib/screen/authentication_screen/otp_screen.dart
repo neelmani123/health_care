@@ -171,7 +171,7 @@ class _OtpScreenState extends State<OtpScreen> {
         loginApi();
       }
   }
-  final HttpClientServices clientRequest=HttpClientServices();
+    final HttpClientServices clientRequest=HttpClientServices();
   void loginApi()async{
     var prefs=await SharedPreferences.getInstance();
     var res;
