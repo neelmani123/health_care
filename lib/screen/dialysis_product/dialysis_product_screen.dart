@@ -3,10 +3,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/http_request.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 import '../../models/dialysis_product_model/dialysis_product_model.dart';
 import 'dialysis_product_details_screen.dart';
 class DialysisProductScreen extends StatefulWidget {
@@ -19,9 +21,16 @@ class DialysisProductScreen extends StatefulWidget {
 class _DialysisProductScreenState extends State<DialysisProductScreen> {
   List<Products> products=[];
   final HttpServices httpServices=HttpServices();
+  final HttpClientServices httpClientServices = HttpClientServices();
 
   Future productApi()async{
-    var res=await httpServices.productApi();
+    var prefs = await SharedPreferences.getInstance();
+    var res;
+    if (prefs.get('login_type').toString() == "client") {
+      res = await httpClientServices.productApi();
+    } else {
+       res=await httpServices.productApi();
+    }
     if(res!.result==true)
       {
         setState(() {

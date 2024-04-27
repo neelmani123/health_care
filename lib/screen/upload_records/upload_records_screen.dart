@@ -297,6 +297,8 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
 
   }
 
+
+
   Widget cameraWidget(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

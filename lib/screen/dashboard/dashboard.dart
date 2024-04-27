@@ -9,6 +9,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_images.dart';
 import '../../common/pref_manager.dart';
+import '../blogs_screen/create_blogs_screen.dart';
 import '../home_screen/home_screen.dart';
 
 
@@ -54,7 +55,7 @@ class _DashBoardState extends State<DashBoard> {
     const HomeScreen(),
     const HomeScreen(),
     const BlogScreen(navigatePage: ''),
-    const HomeScreen(),
+    const CreateBlogsScreen(),
     const ClientProfileScreen(),
   ];
 

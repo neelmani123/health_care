@@ -14,6 +14,7 @@ import '../../common/pref_manager.dart';
 import '../../models/profile_model/client_profile_model.dart';
 import '../../models/profile_model/profile_model.dart';
 import '../my_booking_screen/my_wish_list_screen.dart';
+import '../user_list/user_list_screen.dart';
 
 class ClientProfileScreen extends StatefulWidget {
   const ClientProfileScreen({super.key});
@@ -123,7 +124,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
         children: [
           InkWell(
             onTap: (){
-              Get.to(MyBookingScreen());
+            //  Get.to(MyBookingScreen());
             },
             child: Row(
               children: [
@@ -140,7 +141,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
           DesignConfig.space(h: 2.h),
           InkWell(
             onTap: (){
-              Get.to(MyWishListScreen());
+            //  Get.to(MyWishListScreen());
             },
             child: Row(
               children: [
@@ -155,34 +156,49 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon6.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.clientMyPres,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(UserListScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon6.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.clientMyPres,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon5.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.clientMyLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(UserListScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon5.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.clientMyLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
 
           DesignConfig.space(h: 2.h),
 
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon9.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.clientDoctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(UserListScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon9.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.clientDoctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),

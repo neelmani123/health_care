@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:health_care/common/custom_text.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../common/app_bar.dart';
+import '../../common/custom_ui.dart';
 
 class BlogsDetails extends StatefulWidget {
   final image,text,description;
@@ -39,13 +41,8 @@ class _BlogsDetailsState extends State<BlogsDetails> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-            child: CustomText(
-              text: widget.description.toString(),
-              color: const Color(0xFF8A8A8A),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+            padding:  EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            child: CustomUi.htmlText(widget.description.toString())
           ),
         ],
       ),

@@ -130,6 +130,9 @@ class CustomUi {
 
   static Widget htmlText(String text)
   {
-    return HtmlWidget(text.toString());
+    return HtmlWidget(
+
+        text.toString(),
+    );
   }
 }

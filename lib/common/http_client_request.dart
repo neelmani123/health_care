@@ -9,11 +9,15 @@ import 'package:health_care/models/profile_model/settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/client_dialysis_appointment/client_dialysis_appointment_model.dart';
 import '../models/common_model.dart';
+import '../models/dialysis_product_model/dialysis_product_model.dart';
 import '../models/doctor_list_model/doctor_details_model.dart';
 import '../models/doctor_list_model/slots_model.dart';
 import '../models/profile_model/client_profile_model.dart';
 import '../models/send_otp_model/client_login_model.dart';
 import '../models/send_otp_model/send_otp_model.dart';
+import '../models/user_list_model/patient_details_model.dart';
+import '../models/user_list_model/use_prescription_model.dart';
+import '../models/user_list_model/user_list_model.dart';
 
 class HttpClientServices {
   ApiBaseClient helper = ApiBaseClient();
@@ -177,4 +181,58 @@ class HttpClientServices {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
+
+
+  Future<UserListModel?> userListApi() async {
+    Map<String, dynamic> reqBody = {
+
+    };
+    final response = await helper.postBearerApi('users_list', reqBody);
+    try {
+      return UserListModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<PatientDetailsModel?> patientDetailsApi({var userId}) async {
+    Map<String, dynamic> reqBody = {
+      "user_id":userId.toString()
+    };
+    final response = await helper.postBearerApi('patient_details', reqBody);
+    try {
+      return PatientDetailsModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<UsePrescriptionListModel?> usePrescriptionListApi({var userId,type}) async {
+    Map<String, dynamic> reqBody = {
+      "user_id":userId.toString(),
+      "type":type.toString()
+    };
+    final response = await helper.postBearerApi('user_prescription_list', reqBody);
+    try {
+      return UsePrescriptionListModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+
+
+  Future<DialysisProductModel?>productApi()async{
+    Map<String, dynamic> reqBody = {};
+
+    final response=await helper.postBearerApi('products_list', reqBody);
+    try{
+      return DialysisProductModel.fromJson(response);
+    }
+    catch(e)
+    {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
 }

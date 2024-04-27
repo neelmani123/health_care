@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:health_care/screen/blogs_screen/blogs_details.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
 import '../../models/blogs_model/blogs_model.dart';
 
@@ -98,7 +100,7 @@ class _BlogScreenState extends State<BlogScreen> {
   Widget blogsWidget(){
     return Expanded(child: GridView.builder(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        //physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // number of items in each row
             mainAxisSpacing: 8.0, // spacing between rows
@@ -144,19 +146,16 @@ class _BlogScreenState extends State<BlogScreen> {
                       text: blogs[index].title.toString(),
                       color: const Color(0xFF333333),
                       fontSize: 13,
+                      maxLine: 2,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   DesignConfig.space(h: 0.5.h),
-                  Padding(
+
+                  Container(
+                    height: MediaQuery.of(context).size.height/7,
                     padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: CustomText(
-                      text:
-                     blogs[index].description.toString(),
-                      color: const Color(0xFF677294),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w300,
-                    ),
+                    child: CustomUi.htmlText(blogs[index].description.l),
                   ),
                   DesignConfig.space(h: 1.h),
                   Padding(

@@ -275,7 +275,7 @@ class _ClientDialysisAppointmentState extends State<ClientDialysisAppointment>
                                   ],
                                 ),
                                 DesignConfig.space(h: 10),
-                                appointments[index].isExpanded==true?Container():Row(
+                                type=="schedule"||type=="completed"?Container():appointments[index].isExpanded==true?Container():Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
@@ -353,9 +353,7 @@ class _ClientDialysisAppointmentState extends State<ClientDialysisAppointment>
                               itemBuilder: (context, index1) {
                                 if(appointments[index].slotTime==(slots[index1].startTime.toString() + "-"+slots[index1].endTime.toString()))
                                   {
-                                    setState(() {
-                                      select=index1;
-                                    });
+                                    select=index1;
                                   }
                                 return InkWell(
                                   onTap: () {
@@ -390,7 +388,7 @@ class _ClientDialysisAppointmentState extends State<ClientDialysisAppointment>
                             InkWell(
                               onTap: (){
                                 setState(() {
-                                  Get.to(ClientDialysisAppointmentDetailsScreen());
+                                  Get.to(ClientDialysisAppointmentDetailsScreen(id: appointments[index].userId.toString(),slotTime: selectSlots.toString(),appointmentId: appointments[index].id.toString(),));
                                 });
                               },
                               child: Container(
@@ -444,4 +442,9 @@ class _ClientDialysisAppointmentState extends State<ClientDialysisAppointment>
               );
             });
   }
+
+
+
+
+
 }

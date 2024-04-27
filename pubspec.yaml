@@ -48,6 +48,8 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
+  html_editor_enhanced: ^2.5.1
+  quill_html_editor:
 
 
   permission_handler:

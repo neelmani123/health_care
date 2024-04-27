@@ -19,9 +19,11 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/http_client_request.dart';
 import '../../models/home_model/home_model.dart';
+import '../blogs_screen/blogs_details.dart';
 import '../dialyis_incharge/dialysis_incharge_screen.dart';
 import '../dialysis_product/dialysis_product_screen.dart';
 import '../my_booking_screen/client_dialysis_appointment.dart';
+import '../user_list/user_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -140,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
 
-      bottomSheet:InkWell(
+      bottomSheet:loginType == "client"?InkWell(
         onTap: (){
           Get.to(DialysisIncharge());
         },
@@ -155,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: CustomText(text: 'Start Dialysis',color: AppColors.whiteColor,),
         ),
-      ),
+      ):null,
       body: (loading)
           ? const Center(
               child: CircularProgressIndicator(),
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       bestSelling(),
                       DesignConfig.space(h: 2.h),
                       blogs(),
-                      DesignConfig.space(h: 2.h),
+                      DesignConfig.space(h: 7.h),
                     ],
                   ),
                 ),
@@ -308,11 +310,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                         builder: (_) => const ClientDialysisAppointment()));
               } else if (index == 2) {
-                Get.to(DialysisCentreScreen());
+                Get.to(UserListScreen());
               } else if (index == 3) {
                 Get.to(DialysisProductScreen());
-              } else if (index == 5) {
-                Get.to(UploadRecordsScreen());
+              }
+              else if(index==4)
+                {
+                  Get.to(UserListScreen());
+                }
+              else if (index == 5) {
+                Get.to(UserListScreen());
               }
             },
             child: Column(
@@ -503,76 +510,71 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: homeData!.blogs!.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return Container(
-                  height: 200,
-                  width: 200,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.blackColor.withOpacity(0.6),
-                          blurStyle: BlurStyle.outer,
-                          blurRadius: 4,
-                        )
-                      ]),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      DesignConfig.space(h: 1.h),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        height: 70,
-                        width: 200,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    homeData!.blogs![index].image.toString()),
-                                fit: BoxFit.cover),
-                            borderRadius: BorderRadius.circular(6)),
-                      ),
-                      DesignConfig.space(h: 1.h),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: CustomText(
-                          text: homeData!.blogs![index].title.toString(),
-                          color: const Color(0xFF333333),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                return InkWell(
+                  onTap: (){
+                    Get.to(BlogsDetails(image: homeData!.blogs![index].image.toString(),text: homeData!.blogs![index].title.toString(),description: homeData!.blogs![index].description.toString(),));
+                  },
+                  child: Container(
+                    height: 200,
+                    width: 200,
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.blackColor.withOpacity(0.6),
+                            blurStyle: BlurStyle.outer,
+                            blurRadius: 4,
+                          )
+                        ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        DesignConfig.space(h: 1.h),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          height: 70,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      homeData!.blogs![index].image.toString()),
+                                  fit: BoxFit.cover),
+                              borderRadius: BorderRadius.circular(6)),
                         ),
-                      ),
-                      DesignConfig.space(h: 0.5.h),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: CustomText(
-                          text: homeData!.blogs![index].description.toString(),
-                          color: const Color(0xFF677294),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w300,
+                        DesignConfig.space(h: 1.h),
+                        Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 10),
+                          child: CustomUi.htmlText(homeData!.blogs![index].title.toString()),
                         ),
-                      ),
-                      DesignConfig.space(h: 1.h),
-                      Padding(
+                        DesignConfig.space(h: 0.5.h),
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: 'Read more',
-                                fontWeight: FontWeight.w300,
-                                fontSize: 13,
-                                color: const Color(0xFF545454),
-                              ),
-                              DesignConfig.space(w: 10),
-                              const Icon(
-                                Icons.arrow_forward,
-                                size: 16,
-                              )
-                            ],
-                          )),
-                    ],
+                          child: CustomUi.htmlText(homeData!.blogs![index].description.toString()),
+                        ),
+                        DesignConfig.space(h: 1.h),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: 'Read more',
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 13,
+                                  color: const Color(0xFF545454),
+                                ),
+                                DesignConfig.space(w: 10),
+                                const Icon(
+                                  Icons.arrow_forward,
+                                  size: 16,
+                                )
+                              ],
+                            )),
+                      ],
+                    ),
                   ),
                 );
               }),
