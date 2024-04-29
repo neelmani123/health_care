@@ -152,11 +152,7 @@ class _BlogScreenState extends State<BlogScreen> {
                   ),
                   DesignConfig.space(h: 0.5.h),
 
-                  Container(
-                    height: MediaQuery.of(context).size.height/7,
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: CustomUi.htmlText(blogs[index].description.l),
-                  ),
+                  CustomUi.htmlText(blogs[index].description.toString()),
                   DesignConfig.space(h: 1.h),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6),
