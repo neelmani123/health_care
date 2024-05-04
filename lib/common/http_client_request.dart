@@ -15,6 +15,7 @@ import '../models/doctor_list_model/slots_model.dart';
 import '../models/profile_model/client_profile_model.dart';
 import '../models/send_otp_model/client_login_model.dart';
 import '../models/send_otp_model/send_otp_model.dart';
+import '../models/start_dialysis_model/start_dialysis_model.dart';
 import '../models/user_list_model/patient_details_model.dart';
 import '../models/user_list_model/use_prescription_model.dart';
 import '../models/user_list_model/user_list_model.dart';
@@ -157,11 +158,11 @@ class HttpClientServices {
     }
   }
 
-  Future<ClientDialysisAppointmentModel?> clientAppointmentApi({var status}) async {
-    Map<String, dynamic> reqBody = {
-      "status":status
-    };
-    final response = await helper.postBearerApi('hospital_appointments', reqBody);
+  Future<ClientDialysisAppointmentModel?> clientAppointmentApi(
+      {var status}) async {
+    Map<String, dynamic> reqBody = {"status": status};
+    final response =
+        await helper.postBearerApi('hospital_appointments', reqBody);
     try {
       return ClientDialysisAppointmentModel.fromJson(response);
     } catch (e) {
@@ -169,12 +170,16 @@ class HttpClientServices {
     }
   }
 
-
-  Future<CommonModel?> clientUpdateAppointmentApi({var appointment_id,var slot_time,var date,var status}) async {
+  Future<CommonModel?> clientUpdateAppointmentApi(
+      {var appointment_id, var slot_time, var date, var status}) async {
     Map<String, dynamic> reqBody = {
-      "appointment_id":appointment_id,"slot_time":slot_time,"date":date,"status":status
+      "appointment_id": appointment_id,
+      "slot_time": slot_time,
+      "date": date,
+      "status": status
     };
-    final response = await helper.postBearerApi('update_hospital_appointments', reqBody);
+    final response =
+        await helper.postBearerApi('update_hospital_appointments', reqBody);
     try {
       return CommonModel.fromJson(response);
     } catch (e) {
@@ -182,11 +187,8 @@ class HttpClientServices {
     }
   }
 
-
   Future<UserListModel?> userListApi() async {
-    Map<String, dynamic> reqBody = {
-
-    };
+    Map<String, dynamic> reqBody = {};
     final response = await helper.postBearerApi('users_list', reqBody);
     try {
       return UserListModel.fromJson(response);
@@ -196,9 +198,7 @@ class HttpClientServices {
   }
 
   Future<PatientDetailsModel?> patientDetailsApi({var userId}) async {
-    Map<String, dynamic> reqBody = {
-      "user_id":userId.toString()
-    };
+    Map<String, dynamic> reqBody = {"user_id": userId.toString()};
     final response = await helper.postBearerApi('patient_details', reqBody);
     try {
       return PatientDetailsModel.fromJson(response);
@@ -207,12 +207,14 @@ class HttpClientServices {
     }
   }
 
-  Future<UsePrescriptionListModel?> usePrescriptionListApi({var userId,type}) async {
+  Future<UsePrescriptionListModel?> usePrescriptionListApi(
+      {var userId, type}) async {
     Map<String, dynamic> reqBody = {
-      "user_id":userId.toString(),
-      "type":type.toString()
+      "user_id": userId.toString(),
+      "type": type.toString()
     };
-    final response = await helper.postBearerApi('user_prescription_list', reqBody);
+    final response =
+        await helper.postBearerApi('user_prescription_list', reqBody);
     try {
       return UsePrescriptionListModel.fromJson(response);
     } catch (e) {
@@ -220,19 +222,77 @@ class HttpClientServices {
     }
   }
 
-
-
-  Future<DialysisProductModel?>productApi()async{
+  Future<DialysisProductModel?> productApi() async {
     Map<String, dynamic> reqBody = {};
 
-    final response=await helper.postBearerApi('products_list', reqBody);
-    try{
+    final response = await helper.postBearerApi('products_list', reqBody);
+    try {
       return DialysisProductModel.fromJson(response);
-    }
-    catch(e)
-    {
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
 
+  Future<StartDialysisModel?> startDialysisApi({
+    var appointment_id,
+    machine_no,
+    from_where,
+    vascular_access,
+    dialyzer,
+    dialyzer_type,
+    dialyzer_type_text,
+    blood_tubing_set,
+    blood_tubing_set_text,
+    advice,
+    injectable,
+    injectible_select,
+    remarks,next_appointment_remarks,
+    sign,
+    bp,
+    pulse,
+    spo2,
+    duration,
+    heperin_unit,
+    mean_blood_flow,
+    dialysis_solution,
+    pre_dialysis_weight,
+    post_dialysis_weight,
+    total_uf_goal,
+    conductivity
+  }) async {
+    Map<String, dynamic> reqBody = {
+      "appointment_id": appointment_id.toString(),
+      "machine_no": machine_no,
+      "from_where": from_where,
+      "vascular_access": vascular_access,
+      "dialyzer": dialyzer,
+      "dialyzer_type": dialyzer_type,
+      "dialyzer_type_text": dialyzer_type_text,
+      "blood_tubing_set": blood_tubing_set,
+      "blood_tubing_set_text": blood_tubing_set_text,
+      "advice": advice,
+      "injectable": injectable,
+      "injectible_select": injectible_select,
+      "remarks": remarks,
+      "next_appointment_remarks": next_appointment_remarks,
+      "sign": sign,
+      "bp": bp,
+      "pulse": pulse,
+      "spo2": spo2,
+      "duration": duration,
+      "heperin_unit": heperin_unit,
+      "mean_blood_flow": mean_blood_flow,
+      "dialysis_solution": dialysis_solution,
+      "pre_dialysis_weight": pre_dialysis_weight,
+      "post_dialysis_weight": post_dialysis_weight,
+      "total_uf_goal": total_uf_goal,
+      "conductivity": conductivity
+    };
+    final response = await helper.postBearerApi('update_appointments', reqBody);
+    try {
+      return StartDialysisModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }

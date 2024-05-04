@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/custom_text.dart';
+import 'package:health_care/common/http_client_request.dart';
+import 'package:health_care/common/save_start_dialysis_data.dart';
 import 'package:health_care/screen/dialyis_incharge/select_machine_diaysis.dart';
 
 import '../../common/app_colors.dart';
@@ -15,13 +17,14 @@ class DialysisIncharge extends StatefulWidget {
 }
 
 class _DialysisInchargeState extends State<DialysisIncharge> {
+  var data=SaveStartDialysisData();
+  var httpServices=HttpClientServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>SelectMachineScreen()));
-
+        startDialysisApiCall();
         },
         child: Container(
           height: 45,
@@ -34,7 +37,7 @@ class _DialysisInchargeState extends State<DialysisIncharge> {
           child: CustomText(text: 'Next',color: AppColors.whiteColor,),
         ),
       ),
-      appBar: DesignConfig.appBar(context, double.infinity, 'Consultant lncharge'),
+      appBar: DesignConfig.appBar(context, double.infinity, 'Consultant Incharge'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20,left: 10),
@@ -42,7 +45,7 @@ class _DialysisInchargeState extends State<DialysisIncharge> {
             children: [
               Center(child: SvgPicture.asset('assets/svg/consultIncharge.svg',alignment: Alignment.center,)),
               DesignConfig.space(h: 30),
-              CustomText(text: 'Please select',color: Color(0xFFA1A1A1),fontWeight: FontWeight.w400,fontSize: 13,),
+              CustomText(text: 'Please select',color: const Color(0xFFA1A1A1),fontWeight: FontWeight.w400,fontSize: 13,),
               DesignConfig.space(h: 10),
               consultantDrop()
             ],
@@ -52,7 +55,7 @@ class _DialysisInchargeState extends State<DialysisIncharge> {
     );
   }
 
-List<String> dropItem=["Ravi Kumar","Ravi Kumar","Ravi Kumar"];
+List<String> dropItem=["Ravi Kumar","hi","hello"];
   String dropValue="Ravi kumar";
 
   Widget consultantDrop()
@@ -72,11 +75,28 @@ List<String> dropItem=["Ravi Kumar","Ravi Kumar","Ravi Kumar"];
             dropValue=val.toString();
           });
         },
-        //value: dropValue,
+       // value: dropValue,
+        hint: Padding(
+          padding:  EdgeInsets.symmetric(horizontal: 10),
+          child: CustomText(text: dropValue.toString()),
+        ),
         items: dropItem.map((e){
           return DropdownMenuItem<String>(value: e,child: CustomText(text:e.toString()),);
         }).toList(),
       ),
     );
+  }
+
+
+
+
+  void startDialysisApiCall()async{
+    var res=await httpServices.startDialysisApi(appointment_id: dropValue.toString());
+    if(res!.result==true)
+      {
+        setState(() {
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>SelectMachineScreen()));
+        });
+      }
   }
 }

@@ -4,6 +4,8 @@ import 'package:health_care/common/custom_text.dart';
 import 'package:health_care/screen/dialyis_incharge/start_dialysis_body_screen.dart';
 
 import '../../common/app_colors.dart';
+import '../../common/http_client_request.dart';
+import '../../common/save_start_dialysis_data.dart';
 
 class SelectMachineScreen extends StatefulWidget {
   const SelectMachineScreen({super.key});
@@ -14,12 +16,20 @@ class SelectMachineScreen extends StatefulWidget {
 
 class _SelectMachineScreenState extends State<SelectMachineScreen> {
   List<String>machineImage=['assets/images/machine.png','assets/images/machine.png','assets/images/machine.png','assets/images/machine.png'];
+  var data=SaveStartDialysisData();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  int selectedIndex=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>StartDialysisBodyScreen()));
+          startDialysisApiCall();
+
 
         },
         child: Container(
@@ -56,19 +66,45 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
         child: GridView.builder(
           shrinkWrap: true,
         itemCount: machineImage.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisExtent: 100,
             crossAxisCount: 3),
         itemBuilder: (context,index){
-          return Column(
-            children: [
-              Image.asset(machineImage[index].toString(),height: 70,width: 80,),
-              DesignConfig.space(h: 10),
-              CustomText(text: "No. 1",align: TextAlign.center,)
-            ],
+          return InkWell(
+            onTap: (){
+              setState(() {
+                selectedIndex=index;
+              });
+            },
+            child: Column(
+              children: [
+               Container(
+                 height: 70,
+                 margin: EdgeInsets.symmetric(horizontal: 15),
+                 padding: EdgeInsets.all(10),
+                 decoration: BoxDecoration(
+                   borderRadius: BorderRadius.circular(10),
+                   border: Border.all(color: selectedIndex==index?AppColors.primaryColor:Colors.transparent, width: 3),
+                   image: DecorationImage(image: AssetImage(machineImage[index].toString()),fit: BoxFit.cover)
+                 ),
+               ),
+                DesignConfig.space(h: 10),
+                CustomText(text: "No. 1",align: TextAlign.center,)
+              ],
 
+            ),
           );
         }));
+  }
+  var httpServices=HttpClientServices();
+  void startDialysisApiCall()async{
+    var res=await httpServices.startDialysisApi(machine_no: selectedIndex.toString());
+    if(res!.result==true)
+    {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>const StartDialysisBodyScreen()));
+      });
+    }
   }
 
 
