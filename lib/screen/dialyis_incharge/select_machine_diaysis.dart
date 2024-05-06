@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/custom_text.dart';
@@ -6,6 +8,7 @@ import 'package:health_care/screen/dialyis_incharge/start_dialysis_body_screen.d
 import '../../common/app_colors.dart';
 import '../../common/http_client_request.dart';
 import '../../common/save_start_dialysis_data.dart';
+import '../../models/start_dialysis_model/store_start_dialysis_data.dart';
 
 class SelectMachineScreen extends StatefulWidget {
   const SelectMachineScreen({super.key});
@@ -16,7 +19,6 @@ class SelectMachineScreen extends StatefulWidget {
 
 class _SelectMachineScreenState extends State<SelectMachineScreen> {
   List<String>machineImage=['assets/images/machine.png','assets/images/machine.png','assets/images/machine.png','assets/images/machine.png'];
-  var data=SaveStartDialysisData();
   @override
   void initState() {
     // TODO: implement initState
@@ -28,8 +30,10 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
     return Scaffold(
       bottomSheet:InkWell(
         onTap: (){
-          startDialysisApiCall();
-
+         // startDialysisApiCall();
+          final userMap = jsonDecode(selectedIndex.toString()) as Map<String, dynamic>;
+          StoreStartDialysisData.fromJson(userMap);
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>const StartDialysisBodyScreen()));
 
         },
         child: Container(

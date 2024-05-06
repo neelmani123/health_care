@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/custom_text.dart';
 import 'package:health_care/screen/dialyis_incharge/vascular_access_screen.dart';
 
 import '../../common/app_bar.dart';
+import '../../models/start_dialysis_model/store_start_dialysis_data.dart';
 
 class StartDialysisBodyScreen extends StatefulWidget {
   const StartDialysisBodyScreen({super.key});
@@ -13,6 +16,13 @@ class StartDialysisBodyScreen extends StatefulWidget {
 }
 
 class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var data=jsonEncode(jsonEncode(StoreStartDialysisData));
+    var  data1=jsonDecode(StoreStartDialysisData);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
