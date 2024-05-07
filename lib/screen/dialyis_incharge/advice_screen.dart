@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 import 'injectable_screen.dart';
 
 class AdviceScreen extends StatefulWidget {
@@ -22,7 +25,15 @@ class _AdviceScreenState extends State<AdviceScreen> {
       appBar: DesignConfig.appBar(context, double.infinity, 'Advice'),
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>InjectableScreen()));
+          if(enter.text.isEmpty)
+          {
+            Fluttertoast.showToast(msg: 'Please enter advice...');
+          }
+          else
+          {
+            startDialysisApiCall();
+          }
+
         },
         child: Container(
           height: 45,
@@ -53,5 +64,20 @@ class _AdviceScreenState extends State<AdviceScreen> {
         ),
       ),
     );
+  }
+
+  var httpServices = HttpClientServices();
+
+  void startDialysisApiCall() async {
+    var prefs = await SharedPreferences.getInstance();
+    var res = await httpServices.startDialysisApi(
+        appointment_id: prefs.get('appointment_id').toString(),
+        advice: enter.text.toString(),
+        blood_tubing_set_text: enter.text.toString());
+    if (res!.result == true) {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>InjectableScreen()));
+      });
+    }
   }
 }

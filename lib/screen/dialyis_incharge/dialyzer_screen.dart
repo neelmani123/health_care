@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/custom_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
+import '../../common/http_client_request.dart';
 import 'dialyzer_type_screen.dart';
 
 
@@ -19,6 +22,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
 
 
   List<String> dialyzerText=["Fresinivs medical care",'Nipro','Dora','Vital','B.Braun'];
+  var selectedDailyzerIndex=0;
   final TextEditingController enter=TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,17 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
       appBar: DesignConfig.appBar(context, double.infinity, 'Dialyzers'),
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerTypeScreen()));
+          if(enter.text.isEmpty)
+            {
+              Fluttertoast.showToast(msg: 'Please enter specify...');
+            }
+          else
+            {
+              startDialysisApiCall();
+
+            }
+
+
 
         },
         child: Container(
@@ -81,21 +95,42 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
           mainAxisExtent: 35,// spacing between rows
           crossAxisSpacing: 3.0, // spacing between columns
         ), itemBuilder: (context,index){
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                  color: Color(0xFFBBBBBB),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 1
-              )
-            ]
+      return InkWell(
+        onTap: (){
+          setState(() {
+            selectedDailyzerIndex=index;
+          });
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 5),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selectedDailyzerIndex==index?AppColors.primaryColor:Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                    color: Color(0xFFBBBBBB),
+                    blurStyle: BlurStyle.outer,
+                    blurRadius: 1
+                )
+              ]
+          ),
+          child:   CustomText(text: dialyzerText[index].toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
         ),
-        child:   CustomText(text: dialyzerText[index].toString()),
       );
     });
+  }
+
+
+  var httpServices=HttpClientServices();
+  void startDialysisApiCall()async{
+    var prefs=await SharedPreferences.getInstance();
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer: dialyzerText[selectedDailyzerIndex].toString(),);
+    if(res!.result==true)
+    {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerTypeScreen()));
+      });
+    }
   }
 }

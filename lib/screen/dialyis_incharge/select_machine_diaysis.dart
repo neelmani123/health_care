@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/custom_text.dart';
 import 'package:health_care/screen/dialyis_incharge/start_dialysis_body_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_colors.dart';
 import '../../common/http_client_request.dart';
@@ -30,10 +31,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
     return Scaffold(
       bottomSheet:InkWell(
         onTap: (){
-         // startDialysisApiCall();
-          final userMap = jsonDecode(selectedIndex.toString()) as Map<String, dynamic>;
-          StoreStartDialysisData.fromJson(userMap);
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>const StartDialysisBodyScreen()));
+          startDialysisApiCall(selectedIndex.toString());
 
         },
         child: Container(
@@ -77,7 +75,9 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
           return InkWell(
             onTap: (){
               setState(() {
-                selectedIndex=index;
+                setState(() {
+                  selectedIndex=index;
+                });
               });
             },
             child: Column(
@@ -101,8 +101,9 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
         }));
   }
   var httpServices=HttpClientServices();
-  void startDialysisApiCall()async{
-    var res=await httpServices.startDialysisApi(machine_no: selectedIndex.toString());
+  void startDialysisApiCall(var machineNo)async{
+    var prefs=await SharedPreferences.getInstance();
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: machineNo.toString());
     if(res!.result==true)
     {
       setState(() {

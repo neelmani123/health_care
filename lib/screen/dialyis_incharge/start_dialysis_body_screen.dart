@@ -20,8 +20,6 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var data=jsonEncode(jsonEncode(StoreStartDialysisData));
-    var  data1=jsonDecode(StoreStartDialysisData);
   }
   @override
   Widget build(BuildContext context) {
@@ -42,6 +40,16 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
           ),
           child: CustomText(text: 'Next',color: AppColors.whiteColor,),
         ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15,right: 15),
+            child: Image.asset('assets/images/body_image.png',height: 300,width: 300,),
+          )
+        ],
       ),
     );
   }

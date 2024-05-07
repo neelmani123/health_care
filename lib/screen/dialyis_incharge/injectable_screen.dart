@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_care/screen/dialyis_incharge/remarks_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 
 class InjectableScreen extends StatefulWidget {
   const InjectableScreen({super.key});
@@ -20,10 +22,10 @@ class _InjectableScreenState extends State<InjectableScreen> {
   @override
   Widget build(BuildContext context) {
       return Scaffold(
-        appBar: DesignConfig.appBar(context, double.infinity, 'Advice'),
+        appBar: DesignConfig.appBar(context, double.infinity, 'Injection'),
         bottomSheet:InkWell(
           onTap: (){
-               Navigator.push(context, MaterialPageRoute(builder: (_)=>RemarksScreen()));
+            startDialysisApiCall();
 
           },
           child: Container(
@@ -73,9 +75,10 @@ class _InjectableScreenState extends State<InjectableScreen> {
       child: DropdownButton<String>(
         underline: Container(),
         isExpanded: true,
+        hint: CustomText(text:"ravi kumar" ),
         onChanged: (val){
           setState(() {
-            //dropValue=val.toString();
+            // dropValue=val.toString();
           });
         },
         //value: dropValue,
@@ -84,5 +87,21 @@ class _InjectableScreenState extends State<InjectableScreen> {
         }).toList(),
       ),
     );
+  }
+
+
+  var httpServices = HttpClientServices();
+
+  void startDialysisApiCall() async {
+    var prefs = await SharedPreferences.getInstance();
+    var res = await httpServices.startDialysisApi(
+        appointment_id: prefs.get('appointment_id').toString(),
+        injectible_select: '',
+        );
+    if (res!.result == true) {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>RemarksScreen()));
+      });
+    }
   }
 }

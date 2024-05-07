@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:health_care/screen/dialyis_incharge/dialyzer_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
+import '../../common/http_client_request.dart';
 
 
 class VascularAccessScreen extends StatefulWidget {
@@ -19,13 +21,15 @@ class _VascularAccessScreenState extends State<VascularAccessScreen> {
 
 
   List<String> vascularText=["Femoral",'AVF','AVS','Central line'];
+  var selectedVascularText="Femoral";
+  int _selectedIndex=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DesignConfig.appBar(context, double.infinity, 'Vascular Access'),
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerScreen()));
+          startDialysisApiCall();
 
         },
         child: Container(
@@ -85,10 +89,27 @@ class _VascularAccessScreenState extends State<VascularAccessScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             CustomText(text: vascularText[index].toString()),
-            Radio(value: true, groupValue: true, onChanged: (val){})
+            Radio(value: index, groupValue: _selectedIndex, onChanged: (val){
+              setState(() {
+                _selectedIndex=val!;
+              });
+            })
           ],
         ),
       );
     }));
+  }
+
+
+  var httpServices=HttpClientServices();
+  void startDialysisApiCall()async{
+    var prefs=await SharedPreferences.getInstance();
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),vascular_access: vascularText[_selectedIndex].toString());
+    if(res!.result==true)
+    {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerScreen()));
+      });
+    }
   }
 }
