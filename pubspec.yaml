@@ -50,6 +50,8 @@ dependencies:
   qr_code_scanner: ^1.0.1
   html_editor_enhanced: ^2.5.1
   quill_html_editor:
+  flutter_signature_pad: ^3.0.1
+  hand_signature: ^3.0.1
 
 
   permission_handler:

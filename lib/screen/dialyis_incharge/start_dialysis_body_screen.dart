@@ -21,6 +21,7 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
     // TODO: implement initState
     super.initState();
   }
+  String radio1="";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +46,123 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15,right: 15),
-            child: Image.asset('assets/images/body_image.png',height: 300,width: 300,),
-          )
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            //sheight: 250,
+            decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage('assets/images/body_image.png'),fit: BoxFit.fitHeight)
+            ),
+            child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                     Column(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         CustomText(text: 'Right Solder'),
+                         Radio(value: '1', groupValue: radio1, onChanged: (val){
+                           setState(() {
+                             radio1=val!;
+                           });
+                         }),
+                       ],
+                     ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(text: 'Left Solder'),
+                          Radio(value: '2', groupValue: radio1, onChanged: (val){
+                            setState(() {
+                              radio1=val!;
+                            });
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(text: 'Right Hand'),
+                          Radio(value: '3', groupValue: radio1, onChanged: (val){
+                            setState(() {
+                              radio1=val!;
+                            });
+                          }),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(text: 'Left Hand'),
+                          Radio(value: '4', groupValue: radio1, onChanged: (val){
+                            setState(() {
+                              radio1=val!;
+                            });
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                DesignConfig.space(h: 106),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30,right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CustomText(text: 'Right Lag'),
+                          Radio(value: '5', groupValue: radio1, onChanged: (val){
+                          setState(() {
+                            radio1=val!;
+                          });
+                        }),],
+                      ),
+                      DesignConfig.space(w: 70),
+                      Row(
+                        children: [
+                          Radio(value: '6', groupValue: radio1, onChanged: (val){
+                            setState(() {
+                              radio1=val!;
+                            });
+                          }),
+                          CustomText(text: 'Left Lag'),
+
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 15,right: 15),
+          //   child: Image.asset('assets/images/body_image.png',height: 300,width: 300,),
+          // )
         ],
       ),
     );

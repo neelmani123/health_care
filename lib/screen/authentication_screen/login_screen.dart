@@ -105,18 +105,17 @@ class _LoginScreenState extends State<LoginScreen> {
              // dottedWidget(),
               DesignConfig.space(h: 1.h),
               
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //    IconButton(
-              //
-              //      onPressed: (){
-              //        Get.to(const SignUpScreen());
-              //      }, icon:  CustomText(text: 'Signup',fontWeight: FontWeight.w500,fontSize: 13,color: AppColors.primaryColor,),),
-              //     DesignConfig.space(w: 1.h),
-              //     CustomText(text: 'Doctors/Dialysis center',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.blackColor,),
-              //   ],
-              // )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(text: 'New User',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.blackColor,),
+                  IconButton(
+                    onPressed: (){
+                      Get.to(SignUpScreen());
+                    },
+                    icon: CustomText(text: 'Sign-in here',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.primaryColor,)),
+                ],
+              )
               
             ],
           ),

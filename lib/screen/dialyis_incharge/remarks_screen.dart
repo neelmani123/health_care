@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
+import '../../common/http_client_request.dart';
 import 'next_appointment_screen.dart';
 
 
@@ -25,7 +28,14 @@ class _RemarksScreenState extends State<RemarksScreen> {
       appBar: DesignConfig.appBar(context, double.infinity, 'Remarks'),
       bottomSheet:InkWell(
         onTap: (){
-             Navigator.push(context, MaterialPageRoute(builder: (_)=>NextAppointmentScreen()));
+          if(enter.text.isEmpty)
+            {
+              Fluttertoast.showToast(msg: "Please enter remarks...");
+            }
+          else
+            {
+              startDialysisApiCall();
+            }
 
         },
         child: Container(
@@ -59,5 +69,21 @@ class _RemarksScreenState extends State<RemarksScreen> {
         ),
       ),
     );
+  }
+
+  var httpServices = HttpClientServices();
+
+  void startDialysisApiCall() async {
+    var prefs = await SharedPreferences.getInstance();
+    var res = await httpServices.startDialysisApi(
+      appointment_id: prefs.get('appointment_id').toString(),
+      remarks: enter.text.toString(),
+    );
+    if (res!.result == true) {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>NextAppointmentScreen()));
+
+      });
+    }
   }
 }
