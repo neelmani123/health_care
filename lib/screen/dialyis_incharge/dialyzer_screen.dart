@@ -8,6 +8,7 @@ import '../../common/app_bar.dart';
 import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/http_client_request.dart';
+import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
 import 'dialyzer_type_screen.dart';
 
 
@@ -21,7 +22,33 @@ class DialyzerScreen extends StatefulWidget {
 class _DialyzerScreenState extends State<DialyzerScreen> {
 
 
-  List<String> dialyzerText=["Fresinivs medical care",'Nipro','Dora','Vital','B.Braun'];
+
+
+  DialysisSettings settings=DialysisSettings();
+  bool loading=true;
+  var selectedVascularText;
+  @override
+  void initState() {
+    // TODO: implement initState
+    dialysisSettingsApi();
+    super.initState();
+  }
+
+  void dialysisSettingsApi()async{
+    var res=await httpServices.dialysisSettingsApi();
+    if(res!.result==true)
+    {
+      setState(() {
+        settings=res.settings!;
+        selectedVascularText=settings.dialyzers!.first.value.toString();
+        loading=false;
+      });
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: res.message.toString());
+    }
+  }
   var selectedDailyzerIndex=0;
   final TextEditingController enter=TextEditingController();
   @override
@@ -54,7 +81,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
           child: CustomText(text: 'Next',color: AppColors.whiteColor,),
         ),
       ),
-      body: SingleChildScrollView(
+      body: (loading)?Center(child: CircularProgressIndicator(),):SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -87,7 +114,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
   Widget dialyzerWidget(){
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
-        itemCount: dialyzerText.length,
+        itemCount: settings.dialyzers!.length,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // number of items in each row
@@ -115,7 +142,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
                 )
               ]
           ),
-          child:   CustomText(text: dialyzerText[index].toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
+          child:   CustomText(text: settings.dialyzers![index].value.toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
         ),
       );
     });
@@ -125,7 +152,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall()async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer: dialyzerText[selectedDailyzerIndex].toString(),);
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer: settings.dialyzers![selectedDailyzerIndex].value.toString(),);
     if(res!.result==true)
     {
       setState(() {

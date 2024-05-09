@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../common/pref_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,10 +28,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final HttpServices httpServices=HttpServices();
   final numberController=TextEditingController();
+  var loginType;
 
   @override
   void initState() {
     // TODO: implement initState
+    PrefManager.getLoginUserTypeValue().then((value){
+      setState(() {
+        loginType=value;
+      });
+    });
     super.initState();
   }
 
@@ -104,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
               DesignConfig.space(h: 1.h),
              // dottedWidget(),
               DesignConfig.space(h: 1.h),
-              
-              Row(
+
+              loginType == "client"?Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText(text: 'New User',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.blackColor,),
@@ -115,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     icon: CustomText(text: 'Sign-in here',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.primaryColor,)),
                 ],
-              )
+              ):Container()
               
             ],
           ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/custom_text.dart';
 import 'package:health_care/screen/dialyis_incharge/start_dialysis_body_screen.dart';
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/app_colors.dart';
 import '../../common/http_client_request.dart';
 import '../../common/save_start_dialysis_data.dart';
+import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
 import '../../models/start_dialysis_model/store_start_dialysis_data.dart';
 
 class SelectMachineScreen extends StatefulWidget {
@@ -19,11 +21,28 @@ class SelectMachineScreen extends StatefulWidget {
 }
 
 class _SelectMachineScreenState extends State<SelectMachineScreen> {
-  List<String>machineImage=['assets/images/machine.png','assets/images/machine.png','assets/images/machine.png','assets/images/machine.png'];
+  DialysisSettings settings=DialysisSettings();
+  bool loading=true;
   @override
   void initState() {
     // TODO: implement initState
+    dialysisSettingsApi();
     super.initState();
+  }
+
+  void dialysisSettingsApi()async{
+    var res=await httpServices.dialysisSettingsApi();
+    if(res!.result==true)
+      {
+        setState(() {
+          settings=res.settings!;
+          loading=false;
+        });
+      }
+    else
+      {
+        Fluttertoast.showToast(msg: res.message.toString());
+      }
   }
   int selectedIndex=0;
   @override
@@ -46,7 +65,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
         ),
       ),
       appBar: DesignConfig.appBar(context, double.infinity, 'Select Machine No'),
-      body: Column(
+      body: (loading)?const Center(child: CircularProgressIndicator(),):Column(
         children: [
           DesignConfig.space(h: 30),
           Center(
@@ -67,7 +86,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
     return Expanded(
         child: GridView.builder(
           shrinkWrap: true,
-        itemCount: machineImage.length,
+        itemCount: settings.machines!.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisExtent: 100,
             crossAxisCount: 3),
@@ -89,11 +108,11 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
                  decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(10),
                    border: Border.all(color: selectedIndex==index?AppColors.primaryColor:Colors.transparent, width: 3),
-                   image: DecorationImage(image: AssetImage(machineImage[index].toString()),fit: BoxFit.cover)
+                   image: DecorationImage(image: NetworkImage(settings.machines![index].value.toString()),fit: BoxFit.cover)
                  ),
                ),
                 DesignConfig.space(h: 10),
-                CustomText(text: "No. 1",align: TextAlign.center,)
+                CustomText(text: "No. ${settings.machines![index].key.toString()}",align: TextAlign.center,)
               ],
 
             ),
@@ -103,7 +122,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall(var machineNo)async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: machineNo.toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: settings.machines![selectedIndex].key.toString());
     if(res!.result==true)
     {
       setState(() {

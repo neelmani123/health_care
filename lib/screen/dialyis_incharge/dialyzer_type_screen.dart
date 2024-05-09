@@ -6,6 +6,7 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
 import 'blood_tubing_set_screen.dart';
 
 class DialyzerTypeScreen extends StatefulWidget {
@@ -17,7 +18,31 @@ class DialyzerTypeScreen extends StatefulWidget {
 
 class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
 
-  List<String> dialyzerText=["Low Flux",'Medium Flux','High Flux','Paediatric'];
+  DialysisSettings settings=DialysisSettings();
+  bool loading=true;
+  var selectedVascularText;
+  @override
+  void initState() {
+    // TODO: implement initState
+    dialysisSettingsApi();
+    super.initState();
+  }
+
+  void dialysisSettingsApi()async{
+    var res=await httpServices.dialysisSettingsApi();
+    if(res!.result==true)
+    {
+      setState(() {
+        settings=res.settings!;
+        selectedVascularText=settings.dialyzerType!.first.value.toString();
+        loading=false;
+      });
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: res.message.toString());
+    }
+  }
   var selectedDailyzerIndex=0;
   final TextEditingController enter=TextEditingController();
   @override
@@ -46,7 +71,7 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
           child: CustomText(text: 'Next',color: AppColors.whiteColor,),
         ),
       ),
-      body: SingleChildScrollView(
+      body: (loading)?Center(child: CircularProgressIndicator(),):SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -74,7 +99,7 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
   Widget dialyzerWidget(){
     return GridView.builder(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: dialyzerText.length,
+        itemCount: settings.dialyzerType!.length,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // number of items in each row
@@ -102,7 +127,7 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
                 )
               ]
           ),
-          child:   CustomText(text: dialyzerText[index].toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
+          child:   CustomText(text: settings.dialyzerType![index].value.toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
         ),
       );
     });
@@ -111,7 +136,7 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall()async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer_type: dialyzerText[selectedDailyzerIndex].toString(),dialyzer_type_text: enter.text.toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer_type: settings.dialyzerType![selectedDailyzerIndex].value.toString(),dialyzer_type_text: enter.text.toString());
     if(res!.result==true)
     {
       setState(() {

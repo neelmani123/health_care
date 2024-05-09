@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/api_helper_client.dart';
 import 'package:health_care/models/blogs_model/blogs_model.dart';
+import 'package:health_care/models/dialysis_settings_model/dialysis_settings_model.dart';
 import 'package:health_care/models/generate_qr/generate_qr_model.dart';
 import 'package:health_care/models/home_model/home_model.dart';
 import 'package:health_care/models/profile_model/profile_model.dart';
@@ -228,6 +229,18 @@ class HttpClientServices {
     final response = await helper.postBearerApi('products_list', reqBody);
     try {
       return DialysisProductModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+
+  Future<DialysisSettingsModel?> dialysisSettingsApi() async {
+    Map<String, dynamic> reqBody = {};
+
+    final response = await helper.postBearerApi('settings', reqBody);
+    try {
+      return DialysisSettingsModel.fromJson(response);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
