@@ -21,6 +21,7 @@ import '../../common/http_client_request.dart';
 import '../../models/home_model/home_model.dart';
 import '../blogs_screen/blogs_details.dart';
 import '../dialyis_incharge/dialysis_incharge_screen.dart';
+import '../dialysis_product/best_selliing_details.dart';
 import '../dialysis_product/dialysis_product_screen.dart';
 import '../my_booking_screen/client_dialysis_appointment.dart';
 import '../user_list/user_list_screen.dart';
@@ -358,11 +359,16 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 18,
               color: const Color(0xFF333333),
             ),
-            CustomText(
-              text: 'See all',
-              fontWeight: FontWeight.w300,
-              fontSize: 12,
-              color: const Color(0xFF677294),
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>BestSellingsDetails()));
+              },
+              child: CustomText(
+                text: 'See all',
+                fontWeight: FontWeight.w300,
+                fontSize: 12,
+                color: const Color(0xFF677294),
+              ),
             ),
           ],
         ),
@@ -375,6 +381,15 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: homeData!.bestSelling!.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
+                var name=homeData!
+                    .bestSelling![index].name
+                    .toString();
+                if(name.length>=18)
+                  {
+                    name=homeData!
+                        .bestSelling![index].name
+                        .toString().substring(0,18);
+                  }
                 return Container(
                   height: 180,
                   width: 150,
@@ -410,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: CustomText(
-                          text: homeData!.bestSelling![index].name.toString(),
+                          text: name.toString(),
                           color: const Color(0xFF333333),
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -503,19 +518,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         DesignConfig.space(h: 2.h),
         SizedBox(
-          height: 200,
+          height: 210,
           width: double.infinity,
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: homeData!.blogs!.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
+                var title= homeData!.blogs![index].title.toString();
+                var description= homeData!.blogs![index].description.toString();
+                if(title.length>=50)
+                  {
+                    title= homeData!.blogs![index].title.toString().substring(0,50);
+                  }
+                if(description.length>=50)
+                {
+                  description= homeData!.blogs![index].description.toString().substring(0,50);
+                }
+
                 return InkWell(
                   onTap: (){
                     Get.to(BlogsDetails(image: homeData!.blogs![index].image.toString(),text: homeData!.blogs![index].title.toString(),description: homeData!.blogs![index].description.toString(),));
                   },
                   child: Container(
-                    height: 200,
+                   // height: 200,
                     width: 200,
                     margin:
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -545,15 +571,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(6)),
                         ),
                         DesignConfig.space(h: 1.h),
-                        Padding(
+                        Container(
+                          height: 50,
                           padding:  EdgeInsets.symmetric(horizontal: 10),
-                          child: CustomUi.htmlText(homeData!.blogs![index].title.toString()),
+                          child: CustomUi.htmlText(title),
                         ),
                         DesignConfig.space(h: 0.5.h),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: CustomUi.htmlText(homeData!.blogs![index].description.toString()),
-                        ),
+                        Container(
+                          height: 25,
+                            padding:  EdgeInsets.symmetric(horizontal: 10),
+                            child: CustomUi.htmlText(description)),
                         DesignConfig.space(h: 1.h),
                         Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 6),

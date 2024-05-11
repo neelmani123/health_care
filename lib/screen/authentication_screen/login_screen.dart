@@ -59,12 +59,26 @@ class _LoginScreenState extends State<LoginScreen> {
     if(res!.result==true)
       {
         setState(() {
-          Fluttertoast.showToast(msg: res.message.toString());
-          Get.to(OtpScreen(number: numberController.text.trim().toString(),));
+          if(res!.sign_up==1)
+            {
+              Get.to(SignUpScreen(number: numberController.text.trim().toString(),));
+
+            }
+          else
+            {
+              Get.to(OtpScreen(number: numberController.text.trim().toString(),));
+
+            }
+
+
         });
       }
     else
       {
+        if(res!.sign_up==1)
+        {
+          Get.to(SignUpScreen(number: numberController.text.trim().toString(),));
+        }
         Fluttertoast.showToast(msg: res.message.toString());
       }
   }
@@ -120,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: (){
                       Get.to(SignUpScreen());
                     },
-                    icon: CustomText(text: 'Sign-in here',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.primaryColor,)),
+                    icon: CustomText(text: 'Sign-up here',fontWeight: FontWeight.w400,fontSize: 13,color: AppColors.primaryColor,)),
                 ],
               ):Container()
               

@@ -17,7 +17,7 @@ class CustomUi {
   static Widget editBox(String hint, TextEditingController controller,
       TextInputType textInputType) {
     return Container(
-      height: 8.h,
+      height: 45,
       width: Get.width,
       padding: EdgeInsets.symmetric(horizontal: 10.px),
       alignment: Alignment.center,
@@ -130,9 +130,10 @@ class CustomUi {
 
   static Widget htmlText(String text)
   {
-    return HtmlWidget(
-
-        text.toString(),
+    return Container(
+      child: HtmlWidget(
+          text.toString(),
+      ),
     );
   }
 }

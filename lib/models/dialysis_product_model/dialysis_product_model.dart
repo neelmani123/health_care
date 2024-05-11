@@ -40,6 +40,8 @@ class Products {
   var status;
  var createdAt;
  var updatedAt;
+ var is_wishlist;
+ var ratings;
 
   Products(
       {this.id,
@@ -49,7 +51,9 @@ class Products {
         this.sellingPrice,
         this.description,
         this.status,
+        this.is_wishlist,
         this.createdAt,
+        this.ratings,
         this.updatedAt});
 
   Products.fromJson(Map<String, dynamic> json) {
@@ -57,6 +61,8 @@ class Products {
     name = json['name'];
     image = json['image'];
     mrp = json['mrp'];
+    ratings = json['ratings'];
+    is_wishlist = json['is_wishlist'];
     sellingPrice = json['selling_price'];
     description = json['description'];
     status = json['status'];
@@ -70,6 +76,8 @@ class Products {
     data['name'] = this.name;
     data['image'] = this.image;
     data['mrp'] = this.mrp;
+    data['is_wishlist'] = this.is_wishlist;
+    data['ratings'] = this.ratings;
     data['selling_price'] = this.sellingPrice;
     data['description'] = this.description;
     data['status'] = this.status;

@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:health_care/common/custom_text.dart';
 import 'package:health_care/screen/authentication_screen/signup_screen1.dart';
+import 'package:health_care/screen/dashboard/dashboard.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +22,8 @@ import '../../models/signup_model/sign_up_model.dart';
 import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  final number;
+  const SignUpScreen({super.key,this.number});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -26,14 +31,18 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final nameController = TextEditingController();
-  final gender = TextEditingController();
-  final dob = TextEditingController();
+  final hospitalName = TextEditingController();
+  final doctorName = TextEditingController();
   final address = TextEditingController();
-  final pincode = TextEditingController();
-  final state = TextEditingController();
-  final city = TextEditingController();
+  final doctorQualification = TextEditingController();
+  final doctorDob = TextEditingController();
+  final technionName = TextEditingController();
   final mobile = TextEditingController();
-  final emailId = TextEditingController();
+  final technionQualificatioin = TextEditingController();
+  final numberOfMachines = TextEditingController();
+  final operationTimings = TextEditingController();
+  final about = TextEditingController();
+  final Services = TextEditingController();
 
   final HttpServices httpServices = HttpServices();
   ProfileUser user = ProfileUser();
@@ -41,90 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final ImagePicker _picker = ImagePicker();
 
 
-  void profileApi() async {
-    var res = await httpServices.profileApi();
-    if (res!.result == true) {
-      setState(() {
-        PrefManager.profileDataSave(res);
-        user = res.user!;
-        nameController.text=res.user!.name.toString();
-        gender.text=res.user!.gender.toString();
-        dob.text=res.user!.dob.toString();
-        address.text=res.user!.address.toString();
-        pincode.text=res.user!.pincode.toString();
-        state.text=res.user!.stateId.toString();
-        city.text=res.user!.cityId.toString();
-        emailId.text=res.user!.email.toString();
-      });
-    } else {
-      Fluttertoast.showToast(msg: res.message.toString());
-    }
-  }
 
-
-
-  Future<String> getToken() async {
-    var token = "";
-    await PrefManager.getUserData().then((value) => {
-          debugPrint("Token------------>${value.token}", wrapWidth: 5000),
-         setState(() {
-       token = value.token;
-         }),
-        });
-    return token;
-  }
-
-  updateProfile() async {
-    var token = await getToken();
-    print("hfjdhfkdshl"+token);
-    ApiBaseHelper apiBaseHelper = ApiBaseHelper();
-    var baseUrl = "${apiBaseHelper.aPPmAINuRL}update_profile";
-    var uri = Uri.parse(baseUrl);
-    print("hfjdhfkdshl"+baseUrl);
-    var request = http.MultipartRequest(
-      "POST",
-      uri,
-    );
-
-    request.headers["authorization"] = "Bearer $token";
-    request.fields["name"] = nameController.text.trim().toString();
-    request.fields["email"] = emailId.text.trim().toString();
-    request.fields["gender"] = gender.text.trim().toString();
-    request.fields["dob"] = dob.text.trim().toString();
-    request.fields["address"] = address.text.trim().toString();
-    request.fields["pincode"] = pincode.text.trim().toString();
-    request.fields["state_id"] = state.text.trim().toString();
-    request.fields["city_id"] = city.text.trim().toString();
-   if(path==null)
-     {
-       request.fields['image']="";
-
-     }
-   else
-     {
-       print('hjdfhdjhfhd'+path);
-       // request.files.add(http.MultipartFile.fromBytes(
-       //     'image', File(path).readAsBytesSync(),
-       //     filename: path.toString().split('/').last));
-     }
-    try {
-      debugPrint(jsonEncode("REquest=====>"+request.fields.toString()));
-      http.Response response =
-          await http.Response.fromStream(await request.send());
-      if (response.statusCode == 200) {
-        Get.to(SignUpScrren1());
-      } else {
-        print("Error========+++>"+response.body.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("${response.statusCode}"),
-          ),
-        );
-      }
-    } catch (exception) {
-      debugPrint("exception:==>$exception");
-    }
-  }
 
   Widget bottomSheetSelector() {
     return Container(
@@ -185,7 +111,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    profileApi();
+    if(widget.number!=null)
+      {
+        mobile.text=widget.number;
+      }
     super.initState();
   }
 
@@ -199,8 +128,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              DesignConfig.space(h: 2.h),
-              circleImage(),
               DesignConfig.space(h: 4.h),
               editFieldWidget(),
               DesignConfig.space(h: 3.h),
@@ -212,70 +139,236 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget circleImage() {
-    return Center(
-        child: Stack(
-      children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: path == ""
-              ? NetworkImage(
-                      user.image.toString())
-                  as ImageProvider
-              : FileImage(File(_imageFiler!.path)),
-        ),
-        Positioned(
-            bottom: 0,
-            left: 60,
-            right: 0,
-            child: InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (builder) => bottomSheetSelector());
-              },
-              child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: const BoxDecoration(
-                      color: AppColors.primaryColor, shape: BoxShape.circle),
-                  child: Image.asset(AppImages.editIcon)),
-            ))
-      ],
-    ));
-  }
 
   Widget buttonWidget() {
     return CustomUi.primaryButton('Save', () {
-      updateProfile();
+      updateProfileApi();
     }, 12, AppColors.primaryColor, AppColors.whiteColor, 14, false);
   }
 
   Widget editFieldWidget() {
     return Column(
       children: [
-        CustomUi.editBox('Your name', nameController, TextInputType.text),
+        CustomUi.editBox('Name of centre', nameController, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('Gender', gender, TextInputType.text),
+        CustomUi.editBox('Hospital Name', hospitalName, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('D.O.B', dob, TextInputType.text),
+        Container(
+          height: 50,
+          width: Get.width,
+          padding: EdgeInsets.symmetric(horizontal: 10.px),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyColor5, width: 1),
+              borderRadius: BorderRadius.circular(11)),
+          child: TextFormField(
+            controller: mobile,
+            enabled: widget.number!=null?false:true,
+            decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Mobile',
+                hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFA1A1A1),
+                    fontWeight: FontWeight.w400)),
+          ),
+        ),
         DesignConfig.space(h: 2.h),
         CustomUi.editBox('Address', address, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('PinCode', pincode, TextInputType.text),
+        CustomUi.editBox('Doctor name', doctorName, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('State', state, TextInputType.text),
+        CustomUi.editBox('Doctor Qualification', doctorQualification, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('City', city, TextInputType.text),
+        CustomUi.editBox('Doctor D.O.B', doctorDob, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox(
-          'Mobile No.',
-          mobile,
-          TextInputType.number,
+        InkWell(
+          onTap: (){
+            showModalBottomSheet(
+                context: context,
+                // isScrollControlled: true,
+                builder: (builder) {
+                  return StatefulBuilder(builder: (BuildContext context,StateSetter setState){
+                    return bottomSheetSelector();
+                  });
+                } );
+          },
+          child: Container(
+            height: 50,
+            width: Get.width,
+            padding: EdgeInsets.symmetric(horizontal: 10.px),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyColor5, width: 1),
+                borderRadius: BorderRadius.circular(11)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: CustomText(text: path==""?'Doctor Photo':path.split('/').last,color: AppColors.greyColor.withOpacity(0.5),fontSize: 10)),
+                Icon(Icons.upload,color: AppColors.greyColor.withOpacity(0.5),size: 12,)
+              ],
+            )
+          ),
         ),
         DesignConfig.space(h: 2.h),
-        CustomUi.editBox('Email id', emailId, TextInputType.emailAddress),
+        CustomUi.editBox('Technion name', technionName, TextInputType.text),
+        DesignConfig.space(h: 2.h),
+        CustomUi.editBox('Technion Qualification', technionQualificatioin, TextInputType.text),
+        DesignConfig.space(h: 2.h),
+        CustomUi.editBox('Number of Machines', numberOfMachines, TextInputType.text),
+        DesignConfig.space(h: 2.h),
+        CustomUi.editBox('Operational timings', operationTimings, TextInputType.text),
+        DesignConfig.space(h: 2.h),
+        InkWell(
+          onTap: (){
+            selectFile();
+          },
+          child: Container(
+            height: 8.h,
+            width: Get.width,
+            padding: EdgeInsets.symmetric(horizontal: 10.px),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyColor5, width: 1),
+                borderRadius: BorderRadius.circular(11)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomText(text: selectedImages.isEmpty?'Select multiple images...':selectedImages.length.toString()+" File selected",color: AppColors.greyColor3,),
+                const Icon(Icons.upload_rounded,size: 12,color: AppColors.greyColor3,)
+              ],
+            )
+          ),
+        ),
+        DesignConfig.space(h: 2.h),
+        CustomUi.editBox(
+          'Services Provided',
+          Services,
+          TextInputType.text,
+        ),
+        DesignConfig.space(h: 2.h),
+        Container(
+          height: 15.h,
+          width: Get.width,
+          padding: EdgeInsets.symmetric(horizontal: 10.px),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyColor5, width: 1),
+              borderRadius: BorderRadius.circular(11)),
+          child: TextFormField(
+            decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: 'About the clinic/hospital',
+                //contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+                hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFA1A1A1),
+                    fontWeight: FontWeight.w400)),
+          ),
+        )
       ],
     );
   }
+
+
+
+  updateProfileApi() async {
+    var baseUrl = "https://client.kidneymitr.com/api/v1/register";
+    var uri = Uri.parse(baseUrl);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      // "Authorization": "Bearer " + box.read('token')
+    };
+    
+    var request = http.MultipartRequest("POST", uri);
+    request.headers.addAll(headers);
+    request.fields['phone'] = mobile.text.toString();
+    request.fields['name_of_center'] = nameController.text.toString();
+    request.fields['name_of_hospital'] = hospitalName.text.toString();
+    request.fields['adress'] = address.text.toString();
+    request.fields['doctor_name'] = doctorName.text.toString();
+    request.fields['doctor_qualification'] =doctorQualification.text.toString();
+    request.fields['doctor_dob'] =doctorDob.text.toString();
+    request.fields['technitian_name'] =technionName.text.toString();
+    request.fields['technitian_qualification'] =technionName.text.toString();
+    request.fields['no_of_machines'] =numberOfMachines.text.toString();
+    request.fields['operational_timmings'] =operationTimings.text.toString();
+    request.fields['service_provided'] =Services.text.toString();
+    request.fields['about'] =about.text.toString();
+    request.files.add(http.MultipartFile.fromBytes(
+        'doctor_image', File(path).readAsBytesSync(),
+        filename: path
+            .toString()
+            .split('/')
+            .last));
+
+    for (int i = 0; i < selectedImages.length; i++) {
+      var image = selectedImages[i];
+      var filename = image.path.split('/').last;
+      request.files.addAll([
+        http.MultipartFile.fromBytes(
+          'clinic_images[]',
+          await image.readAsBytes(),
+          filename: filename,
+        ),
+      ]);
+    }
+    try {
+      debugPrint("Request fields:==> ${request.fields}");
+      debugPrint("Request file:==> ${request.files}");
+      http.Response response = await http.Response.fromStream(
+          await request.send());
+      debugPrint(
+          "************************************************************\n\n\n");
+      debugPrint("\t\t\t\t Status Code:--> ${response.statusCode}");
+      debugPrint("\t\t\t\t Response Body:--> ${response.body}");
+      debugPrint(
+          "************************************************************\n\n\n");
+      if (response.statusCode == 200) {
+        // Navigator.pop(context);
+        setState(() {
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+            SnackBar(content: Text("${jsonDecode(response.body)['message']}")));
+        Get.offAll(DashBoard());
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("${response.statusCode}")));
+      }
+    } catch (exception) {
+      setState(() {
+      });
+      debugPrint("exception:==>$exception");
+    }
+  }
+
+  File? selectedImage;
+  List<File> selectedImages = [];
+
+  String fileName = "",Filepath = "";
+  CroppedFile? _croppedFile;
+  selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true);
+    if (result != null) {
+      for (PlatformFile file in result.files) {
+       setState(() {
+         String filePath = file.path!;
+         selectedImages.add(File(file.path.toString()));
+         List<String> nameList=[];
+       });
+        selectedImages.forEach((element) {
+
+        });
+      }
+    } else {
+      // User canceled the picker
+    }
+
+    return selectedImages;
+  }
+
+
 }

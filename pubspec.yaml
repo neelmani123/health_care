@@ -52,6 +52,8 @@ dependencies:
   quill_html_editor:
   flutter_signature_pad: ^3.0.1
   hand_signature: ^3.0.1
+  file_picker:
+  image_cropper: ^4.0.1
 
 
   permission_handler:
