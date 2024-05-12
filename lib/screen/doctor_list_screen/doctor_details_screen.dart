@@ -53,7 +53,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         child: CustomUi.primaryButton('Book Now', () {
-          Get.to(BookDialysisslotsScreen(type: 'hospital',id: widget.id.toString(),image: doctors.image.toString(),bio: doctors.bio.toString(),name: doctors.name.toString(),));
+          Get.to(BookDialysisslotsScreen(type: 'doctor',id: widget.id.toString(),image: doctors.image.toString(),bio: doctors.bio.toString(),name: doctors.name.toString(),));
         }, 11,
             AppColors.primaryColor, AppColors.whiteColor, 14, false),
       ),
@@ -138,13 +138,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                           const Icon(Icons.heart_broken),
                         ],
                       ),
-                      CustomText(
-                        text:
-                        doctors.bio.toString(),
-                        color: const Color(0xFF677294),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w300,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: CustomUi.htmlText(doctors.bio.toString()),
+                ),
                     ],
                   )),
             ],

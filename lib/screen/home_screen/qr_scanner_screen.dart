@@ -1,6 +1,7 @@
  import 'dart:convert';
  import 'dart:io';
  import 'package:fluttertoast/fluttertoast.dart';
+import 'package:health_care/screen/home_screen/qrCOdeScanScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
  import 'package:flutter/material.dart';
 import 'package:health_care/common/custom_ui.dart';
@@ -63,7 +64,8 @@ class _QrScreenScreenState extends State<QrScreenScreen> {
           DesignConfig.space(h: 30),
           Card(
               elevation: 5,
-              shape:  const RoundedRectangleBorder(
+              shape:    RoundedRectangleBorder(
+               // side: BorderSide(color: AppColors.greyColor.withOpacity(0.5),width: 2),
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: QrImageView(
                 // embeddedImageStyle: QrEmbeddedImageStyle(
@@ -76,25 +78,29 @@ class _QrScreenScreenState extends State<QrScreenScreen> {
                 size: 200,
                 gapless: false,
               )),
-          Visibility(
-            visible: scanWidget,
-            child: Expanded(
-              flex: 4,
-              child: QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
-              ),
-            ),
-          ),
+          // Visibility(
+          //   visible: scanWidget,
+          //   child: Expanded(
+          //     flex: 3,
+          //     child: QRView(
+          //       key: qrKey,
+          //       onQRViewCreated: _onQRViewCreated,
+          //     ),
+          //   ),
+          // ),
           Expanded(
             flex: 1,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child:  CustomUi.primaryButton('Scan', (){
-                setState(() {
-                  scanWidget=true;
-                });
-              }, 10, AppColors.primaryColor, AppColors.whiteColor, 12, false),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child:  CustomUi.primaryButton('Scan', (){
+                  setState(() {
+                 //   scanWidget=true;
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=>QRCodeScanScreen()));
+                  });
+                }, 10, AppColors.primaryColor, AppColors.whiteColor, 12, false),
+              ),
             ),
           ),
         ],

@@ -7,10 +7,12 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import '../dashboard/dashboard.dart';
 
 class HeamodialysisOrdersScreen extends StatefulWidget {
-  const HeamodialysisOrdersScreen({super.key});
+  StartDialysisAppointment appointment;
+   HeamodialysisOrdersScreen({super.key,required this.appointment});
 
   @override
   State<HeamodialysisOrdersScreen> createState() => _HeamodialysisOrdersScreenState();
@@ -25,6 +27,40 @@ class _HeamodialysisOrdersScreenState extends State<HeamodialysisOrdersScreen> {
   final TextEditingController TotalUFGoal=TextEditingController();
   String dialysisSolution = '',conductivity='';
   String selectedDialysisSolution="-Bicarb",selectedConductivity='Low';
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Fluttertoast.showToast(msg: widget.appointment.bp.toString());
+    if(widget.appointment.duration!=null)
+    {
+      duration.text=widget.appointment.duration.toString();
+    }
+    if(widget.appointment.heperinUnit!=null)
+    {
+      Heparinunit.text=widget.appointment.heperinUnit.toString();
+    }
+    if(widget.appointment.meanBloodFlow!=null)
+    {
+      MeanBloodFlow.text=widget.appointment.meanBloodFlow.toString();
+    }
+    if(widget.appointment.preDialysisWeight!=null)
+    {
+      PreDialysisWeight.text=widget.appointment.preDialysisWeight.toString();
+    }
+    if(widget.appointment.postDialysisWeight!=null)
+    {
+      PostDialysisWeight.text=widget.appointment.postDialysisWeight.toString();
+    }
+    if(widget.appointment.totalUfGoal!=null)
+    {
+      TotalUFGoal.text=widget.appointment.totalUfGoal.toString();
+    }
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

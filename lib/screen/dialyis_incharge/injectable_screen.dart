@@ -10,9 +10,11 @@ import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 
 class InjectableScreen extends StatefulWidget {
-  const InjectableScreen({super.key});
+  StartDialysisAppointment appointment;
+   InjectableScreen({super.key,required this.appointment});
 
   @override
   State<InjectableScreen> createState() => _InjectableScreenState();
@@ -25,6 +27,7 @@ class _InjectableScreenState extends State<InjectableScreen> {
   Injectables? injectablesData;
   bool loading=true;
   var selectedVascularText;
+  var selectedName="";
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +42,14 @@ class _InjectableScreenState extends State<InjectableScreen> {
       setState(() {
         settings=res.settings!;
         injectables=settings.injectables!;
+        for(int i=0;i<settings.injectables!.length;i++){
+          if(widget.appointment.injectable==settings.injectables![i].value)
+          {
+            print("=======>hgxjgfgdggf"+settings.injectables![i].value.toString());
+            selectedName=settings.injectables![i].value.toString();
+          }
+          loading=false;
+        }
         loading=false;
       });
     }
@@ -61,16 +72,15 @@ class _InjectableScreenState extends State<InjectableScreen> {
       child: DropdownButton<Injectables>(
         underline: Container(),
         isExpanded: true,
-
         onChanged: (Injectables? val){
           setState(() {
-            injectablesData=val;
+            selectedName=val!.value.toString();
           });
         },
         //value: appointmentsSelect,
         hint: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 10),
-          child: CustomText(text: injectablesData==null?"Please Select":injectablesData!.value.toString()),
+          padding:  const EdgeInsets.symmetric(horizontal: 10),
+          child: CustomText(text: selectedName),
         ),
         items: injectables.map((e){
           return DropdownMenuItem<Injectables>(value: e,child: CustomText(text:e.value.toString()),);
@@ -85,14 +95,7 @@ class _InjectableScreenState extends State<InjectableScreen> {
         appBar: DesignConfig.appBar(context, double.infinity, 'Injection'),
         bottomSheet:InkWell(
           onTap: (){
-            if(injectablesData==null)
-              {
-                Fluttertoast.showToast(msg: 'Please select injection...');
-              }
-            else
-              {
                 startDialysisApiCall();
-              }
 
           },
           child: Container(
@@ -140,11 +143,11 @@ class _InjectableScreenState extends State<InjectableScreen> {
     var prefs = await SharedPreferences.getInstance();
     var res = await httpServices.startDialysisApi(
         appointment_id: prefs.get('appointment_id').toString(),
-        injectible_select: injectablesData!.value.toString(),
+        injectible_select: selectedName.toString()
         );
     if (res!.result == true) {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>RemarksScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>RemarksScreen(appointment: res.appointment!,)));
       });
     }
   }

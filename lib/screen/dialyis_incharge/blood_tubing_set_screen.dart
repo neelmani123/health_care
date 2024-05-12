@@ -9,10 +9,12 @@ import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'advice_screen.dart';
 
 class BloodTubingSetScreen extends StatefulWidget {
-  const BloodTubingSetScreen({super.key});
+  StartDialysisAppointment appointment;
+   BloodTubingSetScreen({super.key,required this.appointment});
 
   @override
   State<BloodTubingSetScreen> createState() => _BloodTubingSetScreenState();
@@ -36,8 +38,14 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
     {
       setState(() {
         settings=res.settings!;
-        selectedVascularText=settings.bloodTubingSet!.first.value.toString();
+        for(int i=0;i<settings.bloodTubingSet!.length;i++){
+          if(widget.appointment!.bloodTubingSet==settings.bloodTubingSet![i].value)
+          {
+            selectedVascularText=settings!.bloodTubingSet![i].value.toString();
+            enter.text=widget.appointment.bloodTubingSetText.toString();
+          }
         loading=false;
+      }
       });
     }
     else
@@ -46,35 +54,13 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
     }
   }
   final TextEditingController enter = TextEditingController();
-  var selectedDailyzerIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DesignConfig.appBar(context, double.infinity, 'Blood Tubing Set'),
-      bottomSheet: InkWell(
-        onTap: () {
-          if(enter.text.isEmpty)
-          {
-            Fluttertoast.showToast(msg: 'Please enter specify...');
-          }
-          else
-          {
-            startDialysisApiCall();
-          }
 
-        },
-        child: Container(
-          height: 45,
-          margin: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColors.primaryColor
-          ),
-          child: CustomText(text: 'Next', color: AppColors.whiteColor,),
-        ),
-      ),
+      appBar: DesignConfig.appBar(context, double.infinity, 'Blood Tubing Set'),
       body: (loading)?Center(child: CircularProgressIndicator(),):SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -96,7 +82,23 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
               DesignConfig.space(h: 40),
               CustomText(text: 'Please Specify'),
               DesignConfig.space(h: 20),
-              CustomUi.editBox('Enter here', enter, TextInputType.text,)
+              CustomUi.editBox('Enter here', enter, TextInputType.text,),
+              DesignConfig.space(h: 40),
+              InkWell(
+                onTap: () {
+                  startDialysisApiCall();
+                },
+                child: Container(
+                  height: 45,
+                  margin: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primaryColor
+                  ),
+                  child: CustomText(text: 'Next', color: AppColors.whiteColor,),
+                ),
+              ),
 
             ],
           ),
@@ -120,14 +122,14 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
           return InkWell(
             onTap: () {
               setState(() {
-                selectedDailyzerIndex = index;
+                selectedVascularText = settings.bloodTubingSet![index].value.toString();
               });
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 5),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: selectedDailyzerIndex == index
+                  color:selectedVascularText == settings.bloodTubingSet![index].value.toString()
                       ? AppColors.primaryColor
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
@@ -140,7 +142,7 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
                   ]
               ),
               child: CustomText(text: settings.bloodTubingSet![index].value.toString(),
-                color: selectedDailyzerIndex == index
+                color: selectedVascularText == settings.bloodTubingSet![index].value.toString()
                     ? AppColors.whiteColor
                     : AppColors.greyColor,),
             ),
@@ -154,12 +156,12 @@ class _BloodTubingSetScreenState extends State<BloodTubingSetScreen> {
     var prefs = await SharedPreferences.getInstance();
     var res = await httpServices.startDialysisApi(
         appointment_id: prefs.get('appointment_id').toString(),
-        blood_tubing_set: settings.bloodTubingSet![selectedDailyzerIndex].value.toString(),
+        blood_tubing_set: selectedVascularText,
         blood_tubing_set_text: enter.text.toString());
     if (res!.result == true) {
       setState(() {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => AdviceScreen()));
+            context, MaterialPageRoute(builder: (_) => AdviceScreen(appointment: res.appointment!,)));
       });
     }
   }

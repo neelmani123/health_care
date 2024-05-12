@@ -11,10 +11,12 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'bp_pluse_spo_screen.dart';
 
 class TechnicalSignScreen extends StatefulWidget {
-  const TechnicalSignScreen({super.key});
+  StartDialysisAppointment appointment;
+   TechnicalSignScreen({super.key,required this.appointment});
 
   @override
   State<TechnicalSignScreen> createState() => _TechnicalSignScreenState();
@@ -28,8 +30,7 @@ class _TechnicalSignScreenState extends State<TechnicalSignScreen> {
       appBar: DesignConfig.appBar(context, double.infinity, 'Technician Sign'),
       bottomSheet:InkWell(
         onTap: (){
-             Navigator.push(context, MaterialPageRoute(builder: (_)=>BpPlusSpoScreen()));
-
+             Navigator.push(context, MaterialPageRoute(builder: (_)=>BpPlusSpoScreen(appointment: widget.appointment,)));
         },
         child: Container(
           height: 45,
@@ -183,7 +184,7 @@ class _TechnicalSignScreenState extends State<TechnicalSignScreen> {
     );
     if (res!.result == true) {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>TechnicalSignScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>BpPlusSpoScreen(appointment: res.appointment!,)));
 
       });
     }

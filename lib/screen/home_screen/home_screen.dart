@@ -11,6 +11,7 @@ import 'package:health_care/common/pref_manager.dart';
 import 'package:health_care/screen/blogs_screen/blogs_screen.dart';
 import 'package:health_care/screen/dialysis_centre/dialysis_centre_screen.dart';
 import 'package:health_care/screen/home_screen/book_appointment_screen.dart';
+import 'package:health_care/screen/home_screen/dialysis_record_screen.dart';
 import 'package:health_care/screen/home_screen/qr_scanner_screen.dart';
 import 'package:health_care/screen/upload_records/prescription_details.dart';
 import 'package:health_care/screen/upload_records/upload_records_screen.dart';
@@ -21,6 +22,7 @@ import '../../common/http_client_request.dart';
 import '../../models/home_model/home_model.dart';
 import '../blogs_screen/blogs_details.dart';
 import '../dialyis_incharge/dialysis_incharge_screen.dart';
+import '../dialyis_incharge/start_dialysis_first_screen.dart';
 import '../dialysis_product/best_selliing_details.dart';
 import '../dialysis_product/dialysis_product_screen.dart';
 import '../my_booking_screen/client_dialysis_appointment.dart';
@@ -145,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
       bottomSheet:loginType == "client"?InkWell(
         onTap: (){
-          Get.to(DialysisIncharge());
+          Get.to(StartDialysisFirstScreen());
+
         },
         child: Container(
           width: 150,
@@ -244,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 3, // number of items in each row
             mainAxisSpacing: 8.0, // spacing between rows
             crossAxisSpacing: 8.0, // spacing between columns
-            mainAxisExtent: 140),
+            mainAxisExtent: 143),
         itemCount: dailySisIcon.length,
         itemBuilder: (contex, index) {
           return InkWell(
@@ -258,11 +261,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                         builder: (_) => const BookAppointmentScreen()));
               } else if (index == 2) {
-                Get.to(DialysisCentreScreen());
+                Get.to(const DialysisCentreScreen());
               } else if (index == 3) {
-                Get.to(DialysisProductScreen());
-              } else if (index == 5) {
-                Get.to(UploadRecordsScreen());
+                Get.to(const DialysisProductScreen());
+              }
+              else if(index==4)
+                {
+                  Get.to(const DialysisRecordScreen());
+                }
+
+              else if (index == 5) {
+                Get.to(const UploadRecordsScreen());
               }
             },
             child: Column(
@@ -361,7 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (_)=>BestSellingsDetails()));
+                Get.to(const DialysisProductScreen());
+               // Navigator.push(context, MaterialPageRoute(builder: (_)=>BestSellingsDetails()));
               },
               child: CustomText(
                 text: 'See all',

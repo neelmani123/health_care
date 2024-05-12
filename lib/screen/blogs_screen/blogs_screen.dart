@@ -105,9 +105,19 @@ class _BlogScreenState extends State<BlogScreen> {
             crossAxisCount: 2, // number of items in each row
             mainAxisSpacing: 8.0, // spacing between rows
             crossAxisSpacing: 8.0, // spacing between columns
-            mainAxisExtent: 190),
+            mainAxisExtent: 225),
         itemCount: blogs.length,
         itemBuilder: (contex, index) {
+          var title=blogs[index].title.toString();
+          var description=blogs![index].description.toString();
+          if(title.length>=50)
+          {
+            title= blogs[index].title.toString().substring(0,50);
+          }
+          if(description.length>=50)
+          {
+            description= blogs![index].description.toString().substring(0,50);
+          }
           return InkWell(
             onTap: (){
               Get.to(BlogsDetails(image: blogs[index].image.toString(),text: blogs[index].title.toString(),description: blogs[index].description.toString(),));
@@ -143,7 +153,7 @@ class _BlogScreenState extends State<BlogScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: CustomText(
-                      text: blogs[index].title.toString(),
+                      text: title,
                       color: const Color(0xFF333333),
                       fontSize: 13,
                       maxLine: 2,
@@ -152,7 +162,10 @@ class _BlogScreenState extends State<BlogScreen> {
                   ),
                   DesignConfig.space(h: 0.5.h),
 
-                  CustomUi.htmlText(blogs[index].description.toString()),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: CustomUi.htmlText(description.toString()),
+                  ),
                   DesignConfig.space(h: 1.h),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6),

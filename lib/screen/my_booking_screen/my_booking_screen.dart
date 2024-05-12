@@ -24,20 +24,34 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   final HttpServices httpServices=HttpServices();
   var loginType;
   final HttpClientServices httpClientServices = HttpClientServices();
+  int page=1;
+  var type='pending';
+  ScrollController? _scrollController;
 
-  void myAppointmentApi(String type)async {
+  _scrollListener() {
+    if (_scrollController!.offset >=
+        _scrollController!.position.maxScrollExtent &&
+        !_scrollController!.position.outOfRange) {
+      page += 1;
+      print("Pages is$page");
+      myAppointmentApi();
+
+    }
+  }
+
+  void myAppointmentApi()async {
 
     var res;
     if(loginType=="client"){
       //res = await httpClientServices.myAppointmentApi(status: type);
     }
     else{
-      res = await httpServices.myAppointmentApi(status: type);
+      res = await httpServices.myAppointmentApi(status: type,page: page);
     }
     if (res!.result == true)
   {
     setState(() {
-      appointments=res.appointments!;
+      appointments.addAll(res.appointments!);
     });
   }
     else
@@ -48,13 +62,15 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   @override
   void initState() {
     // TODO: implement initState
+    _scrollController = ScrollController();
+    _scrollController!.addListener(_scrollListener);
     tabController = TabController(length: 2, vsync: this);
     PrefManager.getLoginUserTypeValue().then((value){
       setState(() {
         loginType=value;
       });
     });
-    myAppointmentApi('pending');
+    myAppointmentApi();
     super.initState();
   }
   @override
@@ -72,7 +88,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
                 if(val==0)
                 {
                   setState(() {
-                    myAppointmentApi('pending');
+                    appointments.clear();
+                    page=1;
+                    type='pending';
+                    myAppointmentApi();
                   });
 
 
@@ -80,7 +99,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
                 else if(val==1)
                 {
                   setState(() {
-                    myAppointmentApi('completed');
+                    type='completed';
+                    appointments.clear();
+                    page=1;
+                    myAppointmentApi();
                   });
 
                 }
@@ -103,6 +125,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   Widget dialysisCentrreData() {
     return ListView.builder(
         shrinkWrap: true,
+        controller: _scrollController,
         itemCount: appointments.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -126,7 +149,13 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
                 children: [
                   Expanded(
                       flex: 2,
-                      child: Container(
+                      child: appointments[index].image==""?Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(image: AssetImage('assets/images/profile.png'))),
+                      ):Container(
                         height: 80,
                         width: 80,
                         decoration: BoxDecoration(

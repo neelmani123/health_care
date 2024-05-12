@@ -227,7 +227,7 @@ class _BookDialysisslotsScreenState extends State<BookDialysisslotsScreen> {
 
   Widget EventTableCalender() {
     return Container(
-     height: 350,
+     //height: 350,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -236,65 +236,22 @@ class _BookDialysisslotsScreenState extends State<BookDialysisslotsScreen> {
             blurRadius: 1)
       ], borderRadius: BorderRadius.circular(10)),
       child: TableCalendar(
-        pageJumpingEnabled: true,
-        weekendDays: const [DateTime.saturday, DateTime.sunday],
+
         onPageChanged: (date) {
           selectedDate = date;
           todayDate = formatter.format(selectedDate);
-          //getProfileApi();
-        },
 
-        calendarStyle: const CalendarStyle(
-            disabledTextStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-                color: Colors.white),
-            todayTextStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-                color: Colors.white)),
-        headerVisible: true,
-        headerStyle: HeaderStyle(
-          headerPadding: const EdgeInsets.only(left: 10, top: 5),
-          titleCentered: true,
-          formatButtonVisible: false,
-          formatButtonDecoration: BoxDecoration(
-            color: null,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          formatButtonTextStyle: const TextStyle(color: Colors.white),
-          formatButtonShowsNext: true,
-        ),
-        startingDayOfWeek: StartingDayOfWeek.monday,
+        },
+        headerStyle: HeaderStyle(formatButtonVisible: false,titleCentered: true),
+       selectedDayPredicate: (day)=>isSameDay(day,selectedDate),
         onDaySelected: (date, events) {
           setState(() {
-            selectedDate = date;
-            slotsApi(formatter.format(selectedDate).toString());
+            selectedDate = events;
+            slotsApi(formatter.format(date).toString());
             debugPrint('onday selected--$selectedDate');
             // _selectedEvents = events;
           });
         },
-        calendarBuilders: CalendarBuilders(
-          selectedBuilder: (context, date, event) {
-            return Container(
-              margin: const EdgeInsets.all(4.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue) ,// You can define your logic for color her
-              child: Text(
-                date.day.toString(),
-                style: const TextStyle(
-                  color: Colors.blue, // Text color for the date
-                ),
-              ),
-            );
-          },
-          markerBuilder: (context, date, events) {
-            var formatter = DateFormat("yyyy-MM-dd");
-            String value = "";
-          },
-        ),
 
         firstDay: DateTime(2022, 1, 1),
         lastDay: DateTime(2030, 12, 31),

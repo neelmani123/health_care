@@ -7,10 +7,12 @@ import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'blood_tubing_set_screen.dart';
 
 class DialyzerTypeScreen extends StatefulWidget {
-  const DialyzerTypeScreen({super.key});
+  StartDialysisAppointment appointment;
+   DialyzerTypeScreen({super.key,required this.appointment});
 
   @override
   State<DialyzerTypeScreen> createState() => _DialyzerTypeScreenState();
@@ -34,16 +36,21 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
     {
       setState(() {
         settings=res.settings!;
-        selectedVascularText=settings.dialyzerType!.first.value.toString();
         loading=false;
-      });
+        for(int i=0;i<settings.dialyzerType!.length;i++){
+          if(widget.appointment!.dialyzerType==settings.dialyzerType![i].value)
+          {
+            selectedVascularText=settings!.dialyzerType![i].value.toString();
+            enter.text=widget.appointment.dialyzerType.toString();
+          }
+      }});
     }
     else
     {
       Fluttertoast.showToast(msg: res.message.toString());
     }
   }
-  var selectedDailyzerIndex=0;
+
   final TextEditingController enter=TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -110,14 +117,14 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
       return InkWell(
         onTap: (){
           setState(() {
-            selectedDailyzerIndex=index;
+            selectedVascularText=settings.dialyzerType![index]!.value.toString();
           });
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 5),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: selectedDailyzerIndex==index?AppColors.primaryColor:Colors.transparent,
+              color: selectedVascularText==settings.dialyzerType![index]!.value.toString()?AppColors.primaryColor:Colors.transparent,
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
@@ -127,7 +134,7 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
                 )
               ]
           ),
-          child:   CustomText(text: settings.dialyzerType![index].value.toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
+          child:   CustomText(text: settings.dialyzerType![index].value.toString(),color: selectedVascularText==settings.dialyzerType![index]!.value.toString()?AppColors.whiteColor:AppColors.greyColor,),
         ),
       );
     });
@@ -136,11 +143,11 @@ class _DialyzerTypeScreenState extends State<DialyzerTypeScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall()async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer_type: settings.dialyzerType![selectedDailyzerIndex].value.toString(),dialyzer_type_text: enter.text.toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer_type: selectedVascularText.toString(),dialyzer_type_text: enter.text.toString());
     if(res!.result==true)
     {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>BloodTubingSetScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>BloodTubingSetScreen(appointment: res.appointment!,)));
       });
     }
   }

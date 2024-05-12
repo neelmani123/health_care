@@ -9,9 +9,11 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 
 class NextAppointmentScreen extends StatefulWidget {
-  const NextAppointmentScreen({super.key});
+  StartDialysisAppointment appointment;
+   NextAppointmentScreen({super.key,required this.appointment});
 
   @override
   State<NextAppointmentScreen> createState() => _NextAppointmentScreenState();
@@ -20,6 +22,22 @@ class NextAppointmentScreen extends StatefulWidget {
 class _NextAppointmentScreenState extends State<NextAppointmentScreen> {
   @override
   final TextEditingController enter=TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(widget.appointment.nextAppointmentRemarks==""||widget.appointment.nextAppointmentRemarks==null)
+    {
+
+    }
+    else
+    {
+      enter.text=widget.appointment.nextAppointmentRemarks.toString();
+    }
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +97,7 @@ class _NextAppointmentScreenState extends State<NextAppointmentScreen> {
     );
     if (res!.result == true) {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>TechnicalSignScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>TechnicalSignScreen(appointment: res.appointment!,)));
 
       });
     }

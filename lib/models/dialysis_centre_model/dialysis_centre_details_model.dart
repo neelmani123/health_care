@@ -36,6 +36,7 @@ class DialysisCenter {
   var isOpen247;
   var services;
   var isEmergency;
+  var is_surgery;
   var updatedAt;
   var createdAt;
   var latitude;
@@ -45,6 +46,7 @@ class DialysisCenter {
   var image;
   var totalRatings;
   var avgRatings;
+  var map_html;
 
   DialysisCenter(
       {this.id,
@@ -56,11 +58,13 @@ class DialysisCenter {
         this.status,
         this.isDelete,
         this.isOpen247,
+        this.is_surgery,
         this.description,
         this.services,
         this.isEmergency,
         this.updatedAt,
         this.createdAt,
+        this.map_html,
         this.latitude,
         this.longitude,
         this.isDialysisCenter,
@@ -77,10 +81,12 @@ class DialysisCenter {
     priority = json['priority'];
     status = json['status'];
     isDelete = json['is_delete'];
+    map_html = json['map_html'];
     isOpen247 = json['is_open_247'];
     description = json['description'];
     services = json['services'];
     isEmergency = json['is_emergency'];
+    is_surgery = json['is_surgery'];
     updatedAt = json['updated_at'];
     createdAt = json['created_at'];
     latitude = json['latitude'];
@@ -102,6 +108,8 @@ class DialysisCenter {
     data['status'] = this.status;
     data['is_delete'] = this.isDelete;
     data['is_open_247'] = this.isOpen247;
+    data['map_html'] = this.map_html;
+    data['is_surgery'] = this.is_surgery;
     data['description'] = description;
     data['services'] = this.services;
     data['is_emergency'] = this.isEmergency;

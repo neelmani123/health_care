@@ -1,7 +1,7 @@
 class StartDialysisModel {
   bool? result;
   var message;
-  Appointment? appointment;
+  StartDialysisAppointment? appointment;
 
   StartDialysisModel({this.result, this.message, this.appointment});
 
@@ -9,7 +9,7 @@ class StartDialysisModel {
     result = json['result'];
     message = json['message'];
     appointment = json['appointment'] != null
-        ? Appointment.fromJson(json['appointment'])
+        ? StartDialysisAppointment.fromJson(json['appointment'])
         : null;
   }
 
@@ -24,7 +24,7 @@ class StartDialysisModel {
   }
 }
 
-class Appointment
+class StartDialysisAppointment
 {
 
   var id;
@@ -67,7 +67,7 @@ class Appointment
   var totalUfGoal;
   var conductivity;
 
-  Appointment(
+  StartDialysisAppointment(
       {this.id,
       this.hospitalId,
       this.doctorId,
@@ -108,7 +108,7 @@ class Appointment
       this.totalUfGoal,
       this.conductivity});
 
-  Appointment.fromJson(Map<String, dynamic> json) {
+  StartDialysisAppointment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     hospitalId = json['hospital_id'];
     doctorId = json['doctor_id'];

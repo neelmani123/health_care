@@ -7,11 +7,13 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'heamodialysis_orders_screen.dart';
 
 
 class BpPlusSpoScreen extends StatefulWidget {
-  const BpPlusSpoScreen({super.key});
+  StartDialysisAppointment appointment;
+   BpPlusSpoScreen({super.key,required this.appointment});
 
   @override
   State<BpPlusSpoScreen> createState() => _BpPlusSpoScreenState();
@@ -21,28 +23,35 @@ class _BpPlusSpoScreenState extends State<BpPlusSpoScreen> {
   final TextEditingController bloodController=TextEditingController();
   final TextEditingController pluseController=TextEditingController();
   final TextEditingController spo2Controller=TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Fluttertoast.showToast(msg: widget.appointment.bp.toString());
+    if(widget.appointment.bp!=null)
+    {
+      bloodController.text=widget.appointment.bp.toString();
+    }
+    if(widget.appointment.pulse!=null)
+      {
+        pluseController.text=widget.appointment.pulse.toString();
+      }
+    if(widget.appointment.spo2!=null)
+      {
+        spo2Controller.text=widget.appointment.spo2.toString();
+      }
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DesignConfig.appBar(context, double.infinity, 'B.P, Pulse, Spo2(Pre)'),
       bottomSheet:InkWell(
         onTap: (){
-          if(bloodController.text.isEmpty)
-            {
-              Fluttertoast.showToast(msg: 'Please enter blood pressure...');
-            }
-         else if(pluseController.text.isEmpty)
-          {
-            Fluttertoast.showToast(msg: 'Please enter pluse...');
-          }
-          else if(spo2Controller.text.isEmpty)
-          {
-            Fluttertoast.showToast(msg: 'Please enter Spo2 ...');
-          }
-          else{
+
             startDialysisApiCall();
-          }
-          //   Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerTypeScreen()));
 
         },
         child: Container(
@@ -90,7 +99,7 @@ class _BpPlusSpoScreenState extends State<BpPlusSpoScreen> {
     );
     if (res!.result == true) {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>HeamodialysisOrdersScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>HeamodialysisOrdersScreen(appointment: res.appointment!,)));
 
       });
     }

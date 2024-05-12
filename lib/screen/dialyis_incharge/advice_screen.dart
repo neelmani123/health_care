@@ -8,10 +8,12 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/custom_ui.dart';
 import '../../common/http_client_request.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'injectable_screen.dart';
 
 class AdviceScreen extends StatefulWidget {
-  const AdviceScreen({super.key});
+  StartDialysisAppointment appointment;
+   AdviceScreen({super.key,required this.appointment});
 
   @override
   State<AdviceScreen> createState() => _AdviceScreenState();
@@ -19,6 +21,25 @@ class AdviceScreen extends StatefulWidget {
 
 class _AdviceScreenState extends State<AdviceScreen> {
   final TextEditingController enter=TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(widget.appointment!.advice==""||widget.appointment!.advice==null)
+      {
+
+      }
+    else
+      {
+        enter.text=widget.appointment!.advice.toString();
+      }
+    super.initState();
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +97,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
         blood_tubing_set_text: enter.text.toString());
     if (res!.result == true) {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>InjectableScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>InjectableScreen(appointment: res.appointment!,)));
       });
     }
   }

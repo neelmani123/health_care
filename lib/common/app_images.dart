@@ -44,7 +44,7 @@ class AppImages{
 
   static const homeIcon="assets/svg/home.svg";
   static const blogIcon="assets/svg/blogs.svg";
-  static const medicalRecordIcon="assets/svg/medicalrecord.svg";
+  static const medicalRecordIcon="assets/svg/recordicon.svg";
   static const productsIcon="assets/svg/products.svg";
   static const profile="assets/svg/profileicon.svg";
 

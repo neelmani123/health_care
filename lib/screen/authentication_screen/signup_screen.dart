@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:health_care/common/custom_text.dart';
+import 'package:health_care/screen/authentication_screen/login_screen.dart';
 import 'package:health_care/screen/authentication_screen/signup_screen1.dart';
 import 'package:health_care/screen/dashboard/dashboard.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -153,26 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         DesignConfig.space(h: 2.h),
         CustomUi.editBox('Hospital Name', hospitalName, TextInputType.text),
         DesignConfig.space(h: 2.h),
-        Container(
-          height: 50,
-          width: Get.width,
-          padding: EdgeInsets.symmetric(horizontal: 10.px),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyColor5, width: 1),
-              borderRadius: BorderRadius.circular(11)),
-          child: TextFormField(
-            controller: mobile,
-            enabled: widget.number!=null?false:true,
-            decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Mobile',
-                hintStyle: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFFA1A1A1),
-                    fontWeight: FontWeight.w400)),
-          ),
-        ),
+        CustomUi.editBox('Mobile', mobile, TextInputType.number),
         DesignConfig.space(h: 2.h),
         CustomUi.editBox('Address', address, TextInputType.text),
         DesignConfig.space(h: 2.h),
@@ -332,7 +314,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ScaffoldMessenger.of(context)
             .showSnackBar(
             SnackBar(content: Text("${jsonDecode(response.body)['message']}")));
-        Get.offAll(DashBoard());
+        Get.offAll(LoginScreen());
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("${response.statusCode}")));

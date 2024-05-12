@@ -54,6 +54,7 @@ dependencies:
   hand_signature: ^3.0.1
   file_picker:
   image_cropper: ^4.0.1
+  google_maps_flutter:
 
 
   permission_handler:

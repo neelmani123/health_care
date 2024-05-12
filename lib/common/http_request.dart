@@ -15,6 +15,7 @@ import '../models/doctor_list_model/doctor_list_model.dart';
 import '../models/doctor_list_model/my_booking_model.dart';
 import '../models/doctor_list_model/my_wish_lost_model.dart';
 import '../models/doctor_list_model/slots_model.dart';
+import '../models/home_model/dialysis_record_model.dart';
 import '../models/send_otp_model/login_model.dart';
 import '../models/send_otp_model/send_otp_model.dart';
 import '../models/signup_model/sign_up_model.dart';
@@ -275,9 +276,10 @@ class HttpServices {
     }
   }
 
-  Future<MyBookingModel?>myAppointmentApi({required String status})async{
+  Future<MyBookingModel?>myAppointmentApi({required String status,var page})async{
     Map<String, dynamic> reqBody = {
       "status":status,
+      'page':page
 
     };
 
@@ -300,6 +302,22 @@ class HttpServices {
     final response=await helper.postBearerApi('my_wishlist', reqBody);
     try{
       return MyWishListModel.fromJson(response);
+    }
+    catch(e)
+    {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<DailysisRecordModel?>dialysisRecordApi({required String type})async{
+    Map<String, dynamic> reqBody = {
+      "type":type,
+
+    };
+
+    final response=await helper.postBearerApi('prescription_list', reqBody);
+    try{
+      return DailysisRecordModel.fromJson(response);
     }
     catch(e)
     {

@@ -9,11 +9,13 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/http_client_request.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import 'dialyzer_type_screen.dart';
 
 
 class DialyzerScreen extends StatefulWidget {
-  const DialyzerScreen({super.key});
+  StartDialysisAppointment appointment;
+   DialyzerScreen({super.key,required this.appointment});
 
   @override
   State<DialyzerScreen> createState() => _DialyzerScreenState();
@@ -40,8 +42,15 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
     {
       setState(() {
         settings=res.settings!;
-        selectedVascularText=settings.dialyzers!.first.value.toString();
+        //selectedVascularText=settings.dialyzers!.first.value.toString();
         loading=false;
+        for(int i=0;i<settings.dialyzers!.length;i++){
+          if(widget.appointment!.dialyzer==settings.dialyzers![i].value)
+          {
+            selectedDailyzerIndex=settings!.dialyzers![i].value.toString();
+            enter.text=widget.appointment.dialyzerTypeText.toString();
+          }
+        }
       });
     }
     else
@@ -49,38 +58,13 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
       Fluttertoast.showToast(msg: res.message.toString());
     }
   }
-  var selectedDailyzerIndex=0;
+  var selectedDailyzerIndex="0";
   final TextEditingController enter=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DesignConfig.appBar(context, double.infinity, 'Dialyzers'),
-      bottomSheet:InkWell(
-        onTap: (){
-          if(enter.text.isEmpty)
-            {
-              Fluttertoast.showToast(msg: 'Please enter specify...');
-            }
-          else
-            {
-              startDialysisApiCall();
 
-            }
-
-
-
-        },
-        child: Container(
-          height: 45,
-          margin: const EdgeInsets.only(bottom: 30,left: 20,right: 20),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColors.primaryColor
-          ),
-          child: CustomText(text: 'Next',color: AppColors.whiteColor,),
-        ),
-      ),
       body: (loading)?Center(child: CircularProgressIndicator(),):SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -102,7 +86,34 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
               DesignConfig.space(h: 40),
               CustomText(text: 'Please Specify'),
               DesignConfig.space(h: 20),
-              CustomUi.editBox('Enter here', enter, TextInputType.text,)
+              CustomUi.editBox('Enter here', enter, TextInputType.text,),
+              DesignConfig.space(h: 70),
+              InkWell(
+                onTap: (){
+                  // if(enter.text.isEmpty)
+                  //   {
+                  //     Fluttertoast.showToast(msg: 'Please enter specify...');
+                  //   }
+                  // else
+                  //   {
+                  startDialysisApiCall();
+
+                  //}
+
+
+
+                },
+                child: Container(
+                  height: 45,
+                  margin: const EdgeInsets.only(bottom: 30,left: 20,right: 20),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primaryColor
+                  ),
+                  child: CustomText(text: 'Next',color: AppColors.whiteColor,),
+                ),
+              ),
               
             ],
           ),
@@ -125,14 +136,14 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
       return InkWell(
         onTap: (){
           setState(() {
-            selectedDailyzerIndex=index;
+            selectedDailyzerIndex=settings!.dialyzers![index]!.value.toString();
           });
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 5),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: selectedDailyzerIndex==index?AppColors.primaryColor:Colors.transparent,
+            color: selectedDailyzerIndex==settings!.dialyzers![index]!.value.toString()?AppColors.primaryColor:Colors.transparent,
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
@@ -142,7 +153,7 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
                 )
               ]
           ),
-          child:   CustomText(text: settings.dialyzers![index].value.toString(),color: selectedDailyzerIndex==index?AppColors.whiteColor:AppColors.greyColor,),
+          child:   CustomText(text: settings.dialyzers![index].value.toString(),color: selectedDailyzerIndex==settings!.dialyzers![index]!.value.toString()?AppColors.whiteColor:AppColors.greyColor,),
         ),
       );
     });
@@ -152,11 +163,11 @@ class _DialyzerScreenState extends State<DialyzerScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall()async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer: settings.dialyzers![selectedDailyzerIndex].value.toString(),);
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),dialyzer: selectedDailyzerIndex,dialyzer_type_text: enter.text.toString());
     if(res!.result==true)
     {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerTypeScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerTypeScreen(appointment: res!.appointment!,)));
       });
     }
   }

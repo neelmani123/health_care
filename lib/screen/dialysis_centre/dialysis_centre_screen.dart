@@ -77,7 +77,7 @@ class _DialysisCentreScreenState extends State<DialysisCentreScreen> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: (){
-              Get.to( BookHospitalAppointment(hospitalId: dialysisCenter[index].id.toString(),));
+              Get.to( BookHospitalAppointment(hospitalId: dialysisCenter[index].id.toString(),type: 'hospital',));
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

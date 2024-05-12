@@ -10,6 +10,8 @@ import '../../common/app_colors.dart';
 import '../../common/app_images.dart';
 import '../../common/pref_manager.dart';
 import '../blogs_screen/create_blogs_screen.dart';
+import '../dialysis_product/dialysis_product_screen.dart';
+import '../home_screen/dialysis_record_screen.dart';
 import '../home_screen/home_screen.dart';
 
 
@@ -45,9 +47,9 @@ class _DashBoardState extends State<DashBoard> {
 
    static final List<Widget> pages=<Widget>[
     const HomeScreen(),
-    const HomeScreen(),
+    const DialysisRecordScreen(),
     const BlogScreen(navigatePage: ''),
-    const HomeScreen(),
+    const DialysisProductScreen(),
      ProfileScreen(),
   ];
 
@@ -106,7 +108,7 @@ class _DashBoardState extends State<DashBoard> {
                     color: selectedIndex == 1
                         ? AppColors.primaryColor
                         : AppColors.greyColor1),
-                label: 'Medical\nrecords'),
+                label: 'Medical records'),
             BottomNavigationBarItem(
                 icon: SvgPicture.asset(AppImages.blogIcon,
                     color: selectedIndex == 2

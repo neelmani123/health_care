@@ -9,10 +9,12 @@ import '../../common/app_colors.dart';
 import '../../common/custom_text.dart';
 import '../../common/http_client_request.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 
 
 class VascularAccessScreen extends StatefulWidget {
-  const VascularAccessScreen({super.key});
+  StartDialysisAppointment appointment;
+   VascularAccessScreen({super.key,required this.appointment});
 
   @override
   State<VascularAccessScreen> createState() => _VascularAccessScreenState();
@@ -20,11 +22,8 @@ class VascularAccessScreen extends StatefulWidget {
 
 class _VascularAccessScreenState extends State<VascularAccessScreen> {
 
-
-
-
   var selectedVascularText;
-  int _selectedIndex=0;
+  var _selectedIndex;
 
   DialysisSettings settings=DialysisSettings();
   bool loading=true;
@@ -42,6 +41,13 @@ class _VascularAccessScreenState extends State<VascularAccessScreen> {
       setState(() {
         settings=res.settings!;
         selectedVascularText=settings.vascularAccess!.first.value.toString();
+        for(int i=0;i<settings.vascularAccess!.length;i++){
+          if(widget.appointment!.vascularAccess==settings.vascularAccess![i].key)
+            {
+              Fluttertoast.showToast(msg: settings.vascularAccess![i].value.toString());
+               _selectedIndex=settings.vascularAccess![i].key.toString();
+            }
+        }
         loading=false;
       });
     }
@@ -118,9 +124,10 @@ class _VascularAccessScreenState extends State<VascularAccessScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             CustomText(text: settings.vascularAccess![index].value.toString()),
-            Radio(value: index, groupValue: _selectedIndex, onChanged: (val){
+            Radio(value: settings.vascularAccess![index].key, groupValue: _selectedIndex, onChanged: (val){
               setState(() {
-                _selectedIndex=val!;
+                //_selectedIndex=val!;
+                _selectedIndex=settings.vascularAccess![index].key.toString()!;
               });
             })
           ],
@@ -133,11 +140,11 @@ class _VascularAccessScreenState extends State<VascularAccessScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall()async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),vascular_access: settings.vascularAccess![_selectedIndex].value.toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),vascular_access: _selectedIndex.toString());
     if(res!.result==true)
     {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>DialyzerScreen(appointment: res.appointment!)));
       });
     }
   }

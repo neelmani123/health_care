@@ -25,7 +25,7 @@ class _BookAppointmnetSummaryScreenState extends State<BookAppointmnetSummaryScr
     {
       setState(() {
         Fluttertoast.showToast(msg: res.message.toString());
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>SuccessfulAppointment()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>SuccessfulAppointment(sms: res.message.toString(),)));
 
       });
     }

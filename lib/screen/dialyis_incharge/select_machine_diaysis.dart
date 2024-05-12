@@ -11,10 +11,12 @@ import '../../common/app_colors.dart';
 import '../../common/http_client_request.dart';
 import '../../common/save_start_dialysis_data.dart';
 import '../../models/dialysis_settings_model/dialysis_settings_model.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import '../../models/start_dialysis_model/store_start_dialysis_data.dart';
 
 class SelectMachineScreen extends StatefulWidget {
-  const SelectMachineScreen({super.key});
+  StartDialysisAppointment appointment;
+   SelectMachineScreen({super.key,required this.appointment});
 
   @override
   State<SelectMachineScreen> createState() => _SelectMachineScreenState();
@@ -23,12 +25,23 @@ class SelectMachineScreen extends StatefulWidget {
 class _SelectMachineScreenState extends State<SelectMachineScreen> {
   DialysisSettings settings=DialysisSettings();
   bool loading=true;
+  // var selectedMachine="";
   @override
   void initState() {
     // TODO: implement initState
+    // if(widget.appointment!.machineNo==""||widget.appointment!.machineNo==null)
+    //   {
+    //      selectedIndex=0;
+    //   }
+    // else
+    //   {
+    //     selectedIndex=int.parse(widget.appointment!.machineNo.toString());
+    //
+    //   }
     dialysisSettingsApi();
     super.initState();
   }
+  var  selectedIndex;
 
   void dialysisSettingsApi()async{
     var res=await httpServices.dialysisSettingsApi();
@@ -44,7 +57,8 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
         Fluttertoast.showToast(msg: res.message.toString());
       }
   }
-  int selectedIndex=0;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +109,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
             onTap: (){
               setState(() {
                 setState(() {
-                  selectedIndex=index;
+                  widget.appointment!.machineNo=settings.machines![index].key.toString();
                 });
               });
             },
@@ -107,7 +121,7 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
                  padding: EdgeInsets.all(10),
                  decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(10),
-                   border: Border.all(color: selectedIndex==index?AppColors.primaryColor:Colors.transparent, width: 3),
+                   border: Border.all(color: widget.appointment!.machineNo==settings.machines![index].key.toString()?AppColors.primaryColor:Colors.transparent, width: 3),
                    image: DecorationImage(image: NetworkImage(settings.machines![index].value.toString()),fit: BoxFit.cover)
                  ),
                ),
@@ -122,11 +136,12 @@ class _SelectMachineScreenState extends State<SelectMachineScreen> {
   var httpServices=HttpClientServices();
   void startDialysisApiCall(var machineNo)async{
     var prefs=await SharedPreferences.getInstance();
-    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: settings.machines![selectedIndex].key.toString());
+    Fluttertoast.showToast(msg: prefs.get('appointment_id').toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: widget.appointment!.machineNo.toString());
     if(res!.result==true)
     {
       setState(() {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>const StartDialysisBodyScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=> StartDialysisBodyScreen(appointment: res.appointment!)));
       });
     }
   }

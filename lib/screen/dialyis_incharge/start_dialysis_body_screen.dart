@@ -1,15 +1,20 @@
-import 'dart:convert';
+
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/custom_text.dart';
+import 'package:health_care/common/http_client_request.dart';
 import 'package:health_care/screen/dialyis_incharge/vascular_access_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/app_bar.dart';
+import '../../models/start_dialysis_model/start_dialysis_model.dart';
 import '../../models/start_dialysis_model/store_start_dialysis_data.dart';
 
 class StartDialysisBodyScreen extends StatefulWidget {
-  const StartDialysisBodyScreen({super.key});
+  StartDialysisAppointment appointment;
+   StartDialysisBodyScreen({super.key,required this.appointment});
 
   @override
   State<StartDialysisBodyScreen> createState() => _StartDialysisBodyScreenState();
@@ -28,7 +33,7 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
       appBar: DesignConfig.appBar(context, double.infinity, 'Start Dialysis'),
       bottomSheet:InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>VascularAccessScreen()));
+          startDialysisApiCall();
 
         },
         child: Container(
@@ -166,5 +171,17 @@ class _StartDialysisBodyScreenState extends State<StartDialysisBodyScreen> {
         ],
       ),
     );
+  }
+  var httpServices=HttpClientServices();
+  void startDialysisApiCall()async{
+    var prefs=await SharedPreferences.getInstance();
+    Fluttertoast.showToast(msg: prefs.get('appointment_id').toString());
+    var res=await httpServices.startDialysisApi(appointment_id: prefs.get('appointment_id').toString(),machine_no: widget.appointment!.machineNo.toString());
+    if(res!.result==true)
+    {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=> VascularAccessScreen(appointment: res.appointment!)));
+      });
+    }
   }
 }
