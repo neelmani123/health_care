@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_images.dart';
@@ -39,7 +40,15 @@ class _IdentityScreenState extends State<IdentityScreen> {
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: 15.w),
               child: CustomUi.primaryButton('Next', (){
-                Get.to(const LoginScreen());
+                if(type=="")
+                  {
+                    Fluttertoast.showToast(msg: 'Please Select role');
+                  }
+                else
+                  {
+                    Get.to(const LoginScreen());
+                  }
+
               }, 5, AppColors.primaryColor, AppColors.whiteColor, 14, false),
             )
           ],
@@ -51,7 +60,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
 
 
 
-  String type="patient";
+  String type="";
 
 
   Widget loginType()

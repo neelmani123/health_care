@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/common/app_bar.dart';
@@ -172,6 +173,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Expanded(
               child: TextFormField(
                 controller: numberController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               hintText: 'Mobile Number',

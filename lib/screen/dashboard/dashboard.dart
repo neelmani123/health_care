@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/screen/blogs_screen/blogs_screen.dart';
+import 'package:health_care/screen/home_screen/notification_screen.dart';
 import 'package:health_care/screen/profile_screen/client_profile_screen.dart';
 import 'package:health_care/screen/profile_screen/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -73,7 +75,9 @@ class _DashBoardState extends State<DashBoard> {
           loginType=="client"?IconButton(onPressed: (){
 
           }, icon: Icon(Icons.qr_code)):Container(),
-          SvgPicture.asset("assets/svg/bell.svg"),
+          IconButton(onPressed: (){
+            Get.to(NotificationScreen());
+          }, icon: SvgPicture.asset("assets/svg/bell.svg"),),
           DesignConfig.space(w: 2.h),
           SvgPicture.asset(AppImages.walletIcon),
           DesignConfig.space(w: 2.h),

@@ -175,9 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       DesignConfig.space(h: 2.h),
                       searchWidget(),
-                      DesignConfig.space(h: 2.h),
+                      DesignConfig.space(h: 1.h),
                       bannerWidget(),
-                      DesignConfig.space(h: 3.h),
+                      DesignConfig.space(h: 1.h),
                       loginType=="client"?clientDialysisWidget():dialysisWidget(),
                       DesignConfig.space(h: 2.h),
                       bestSelling(),
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget bannerWidget() {
     return Container(
-      height: 15.h,
+      height: 20.h,
       width: double.infinity,
       child: ListView.builder(
           shrinkWrap: true,

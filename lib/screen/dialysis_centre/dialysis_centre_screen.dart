@@ -63,7 +63,7 @@ class _DialysisCentreScreenState extends State<DialysisCentreScreen> {
       ),
       body: (loading)?Center(child: CircularProgressIndicator(),):dialysisCenter.isEmpty?Center(child: CustomText(text: "No data found..."),):Column(
         children: [
-          DesignConfig.space(h: 2.h),
+          DesignConfig.space(h: 1.h),
           Expanded(child: dialysisCentrreData()),
         ],
       ),
@@ -81,7 +81,7 @@ class _DialysisCentreScreenState extends State<DialysisCentreScreen> {
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(17.px),
                   boxShadow: [
