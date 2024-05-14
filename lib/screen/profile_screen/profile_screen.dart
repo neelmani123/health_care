@@ -10,10 +10,12 @@ import 'package:health_care/screen/cms_screen/cms_screen.dart';
 import 'package:health_care/screen/my_booking_screen/my_booking_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import '../../common/coming_soon.dart';
 import '../../common/pref_manager.dart';
 import '../../models/profile_model/profile_model.dart';
 import '../authentication_screen/login_screen.dart';
 import '../authentication_screen/user_signup_screen.dart';
+import '../home_screen/book_appointment_screen.dart';
 import '../home_screen/dialysis_record_screen.dart';
 import '../my_booking_screen/my_wish_list_screen.dart';
 
@@ -171,64 +173,97 @@ class _ProfileScreenState extends State<ProfileScreen> {
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon5.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.myLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(CommingSoonScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon5.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.myLab,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
 
           DesignConfig.space(h: 2.h),
 
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon9.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.doctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const BookAppointmentScreen()));
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon9.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.doctorCons,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/Icon1.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.myInq,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(CommingSoonScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/Icon1.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.myInq,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon4.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.nextDial,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(CommingSoonScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon4.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.nextDial,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon3.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.giveFeed,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(CommingSoonScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon3.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.giveFeed,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),
           DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              SvgPicture.asset('assets/drawer/icon2.svg'),
-              DesignConfig.space(w: 20),
-              CustomText(text: AppStrings.invite,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
-            ],
+          InkWell(
+            onTap: (){
+              Get.to(CommingSoonScreen());
+            },
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/drawer/icon2.svg'),
+                DesignConfig.space(w: 20),
+                CustomText(text: AppStrings.invite,fontSize: 12,fontWeight: FontWeight.w400,color: AppColors.blackColor,)
+              ],
+            ),
           ),
           DesignConfig.space(h: 2.h),
           DesignConfig.divider(Color(0xFFEFEDE9), 0, 0.8),

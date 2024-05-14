@@ -16,6 +16,7 @@ import '../models/doctor_list_model/my_booking_model.dart';
 import '../models/doctor_list_model/my_wish_lost_model.dart';
 import '../models/doctor_list_model/slots_model.dart';
 import '../models/home_model/dialysis_record_model.dart';
+import '../models/notification_model/notification_list_model.dart';
 import '../models/send_otp_model/login_model.dart';
 import '../models/send_otp_model/send_otp_model.dart';
 import '../models/signup_model/sign_up_model.dart';
@@ -103,6 +104,17 @@ class HttpServices {
     }
     catch(e)
     {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+
+  Future<NotificationListModel?> notificationApi() async {
+    Map<String, dynamic> reqBody = {};
+    final response = await helper.postBearerApi('notification_list', reqBody);
+    try {
+      return NotificationListModel.fromJson(response);
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }

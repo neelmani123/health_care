@@ -26,6 +26,7 @@ class DoctorDetailsModel {
 class Doctors {
   var id;
   var title;
+  var is_wishlist;
   var name;
   var email;
   var phone;
@@ -43,8 +44,14 @@ class Doctors {
   var days;
   var image;
   var bio;
+  var avg_rating;
+  var total_rating;
   var endTime;
   var startTime;
+  var isOpen247;
+  var services;
+  var isEmergency;
+  var is_surgery;
  var priority;
 
   Doctors(
@@ -53,10 +60,17 @@ class Doctors {
         this.name,
         this.email,
         this.phone,
+        this.is_wishlist,
+        this.avg_rating,
+        this.total_rating,
         this.degree,
         this.departmentIds,
         this.fees,
         this.experience,
+        this.isOpen247,
+        this.is_surgery,
+        this.services,
+        this.isEmergency,
         this.slotTime,
         this.status,
         this.isDelete,
@@ -72,28 +86,35 @@ class Doctors {
         this.priority});
 
   Doctors.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    degree = json['degree'];
-    departmentIds = json['department_ids'];
-    fees = json['fees'];
-    experience = json['experience'];
-    slotTime = json['slot_time'];
-    status = json['status'];
-    isDelete = json['is_delete'];
-    updatedAt = json['updated_at'];
-    createdAt = json['created_at'];
-    type = json['type'];
-    hospitalId = json['hospital_id'];
-    days = json['days'];
-    image = json['image'];
-    bio = json['bio'];
-    endTime = json['end_time'];
-    startTime = json['start_time'];
-    priority = json['priority'];
+    id = json['id']??"";
+    title = json['title']??"";
+    name = json['name']??"";
+    is_wishlist = json['is_wishlist']??"";
+    email = json['email']??"";
+    phone = json['phone']??"";
+    degree = json['degree']??"";
+    total_rating = json['total_ratings']??"";
+    avg_rating = json['avg_ratings']??"";
+    departmentIds = json['department_ids']??"";
+    fees = json['fees']??"";
+    isOpen247 = json['is_open_247']??"";
+    services = json['services']??"";
+    isEmergency = json['is_emergency']??"";
+    is_surgery = json['is_surgery']??"";
+    experience = json['experience']??"";
+    slotTime = json['slot_time']??"";
+    status = json['status']??"";
+    isDelete = json['is_delete']??"";
+    updatedAt = json['updated_at']??"";
+    createdAt = json['created_at']??"";
+    type = json['type']??"";
+    hospitalId = json['hospital_id']??"";
+    days = json['days']??"";
+    image = json['image']??"";
+    bio = json['bio']??"";
+    endTime = json['end_time']??"";
+    startTime = json['start_time']??"";
+    priority = json['priority']??"";
   }
 
   Map<String, dynamic> toJson() {
@@ -101,9 +122,15 @@ class Doctors {
     data['id'] = this.id;
     data['title'] = this.title;
     data['name'] = this.name;
+    data['is_wishlist'] = this.is_wishlist;
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['degree'] = this.degree;
+    data['total_ratings'] = this.total_rating;
+    data['avg_ratings'] = this.avg_rating;
+    data['is_surgery'] = this.is_surgery;
+    data['services'] = this.services;
+    data['is_emergency'] = this.isEmergency;
     data['department_ids'] = this.departmentIds;
     data['fees'] = this.fees;
     data['experience'] = this.experience;

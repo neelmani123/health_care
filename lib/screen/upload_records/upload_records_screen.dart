@@ -17,6 +17,8 @@ import '../../common/app_images.dart';
 import '../../common/pref_manager.dart';
 import 'package:http/http.dart' as http;
 
+import '../home_screen/dialysis_record_screen.dart';
+
 
 class UploadRecordsScreen extends StatefulWidget {
   const UploadRecordsScreen({super.key});
@@ -229,16 +231,16 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
 
       if(radioValues=='1')
         {
-          type='Add Prescription';
+          type='prescription';
         }
       else if(radioValues=='2')
         {
-          type='Add Reports';
+          type='reports';
         }
       else if(radioValues=='3')
 
         {
-          type='dd Medical Records';
+          type='dialysis_records';
         }
       updateProfile();
 
@@ -271,7 +273,7 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
     request.fields["type"] = type.toString();
     request.files.add(http.MultipartFile.fromBytes(
         'file', await File(_imageFiler!.path).readAsBytesSync(),
-        filename: _imageFiler.toString().split('/').last))
+        filename: _imageFiler!.path.toString().split('/').last))
     ;
     try {
       debugPrint("kjhkgkgkgh===>"+jsonEncode(request.toString()));
@@ -279,6 +281,7 @@ class _UploadRecordsScreenState extends State<UploadRecordsScreen> {
 
       if (response.statusCode == 200) {
         print("hfjdsgfmdfjgdfgdjkg=====>${response.body.toString()}");
+        Get.to(DialysisRecordScreen());
 
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("${jsonDecode(response.body)['message']}")));

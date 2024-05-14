@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
@@ -40,6 +41,22 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
 
   }
 
+  void wishApi(String id,String type)async{
+    var res=await httpServices.wishListApi(type: type,id: id);
+    if(res!.result==true)
+    {
+      setState(() {
+        Fluttertoast.showToast(msg: res.message.toString());
+        doctorDetailsApi();
+
+      });
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: res.message.toString());
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,7 +70,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         child: CustomUi.primaryButton('Book Now', () {
-          Get.to(BookDialysisslotsScreen(type: 'doctor',id: widget.id.toString(),image: doctors.image.toString(),bio: doctors.bio.toString(),name: doctors.name.toString(),));
+          Get.to(BookDialysisslotsScreen(type: 'doctors',id: widget.id.toString(),image: doctors.image.toString(),bio: doctors.bio.toString(),name: doctors.name.toString(),));
         }, 11,
             AppColors.primaryColor, AppColors.whiteColor, 14, false),
       ),
@@ -135,12 +152,16 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
-                          const Icon(Icons.heart_broken),
+                           InkWell(
+                             onTap: (){
+                               wishApi(doctors.id.toString(),"doctor");
+                             },
+                               child: doctors.is_wishlist==1||doctors.is_wishlist=="1"?SvgPicture.asset('assets/svg/heart.svg'):SvgPicture.asset('assets/svg/like.svg',)),
                         ],
                       ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: CustomUi.htmlText(doctors.bio.toString()),
+                  child: doctors.bio.toString().length>=100?CustomUi.htmlText(doctors.bio.toString().substring(0,100)+"..."):CustomUi.htmlText(doctors.bio.toString()),
                 ),
                     ],
                   )),
@@ -154,7 +175,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomText(text:  '4.0',color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
+                  CustomText(text:  doctors.avg_rating.toString(),color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
                   DesignConfig.space(w: 1.w),
                   const  Padding(
                     padding:  EdgeInsets.only(top: 2),
@@ -179,7 +200,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
     );
   }
 
-  Widget serviceTime(){
+  Widget serviceTime() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -192,112 +213,108 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       ]),
       child: Row(
         children: [
-          Expanded(child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration:
-            BoxDecoration(
-                color: Color(0xFFCBCBCB).withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10.px), boxShadow: [
-            ]),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomText(text: '24/7',color: Color(0xFF333333),fontWeight: FontWeight.w500,fontSize: 16,),
-                CustomText(text: 'Service',color: Color(0xFF677294),fontWeight: FontWeight.w300,fontSize: 12,),
-
-              ],
-            ),
-
-          )),
-          Expanded(child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration:
-            BoxDecoration(
-                color: Color(0xFFCBCBCB).withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10.px), boxShadow: [
-            ]),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomText(text: 'Cancer',color: Color(0xFF333333),fontWeight: FontWeight.w500,fontSize: 16,),
-                CustomText(text: 'Surgery',color: Color(0xFF677294),fontWeight: FontWeight.w300,fontSize: 12,),
-
-              ],
-            ),
-
-          )),
-          Expanded(child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration:
-            BoxDecoration(
-                color: Color(0xFFCBCBCB).withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10.px), boxShadow: [
-            ]),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomText(text: '24 hour',color: Color(0xFF333333),fontWeight: FontWeight.w500,fontSize: 16,),
-                CustomText(text: 'Emergency',color: Color(0xFF677294),fontWeight: FontWeight.w300,fontSize: 12,),
-
-              ],
-            ),
-
-          )),
+          Expanded(
+              child: Visibility(
+                visible: doctors.isOpen247 == 1||doctors.isOpen247 == "1",
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Color(0xFFCBCBCB).withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(10.px),
+                      boxShadow: []),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomText(
+                        text: '24/7',
+                        color: Color(0xFF333333),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                      CustomText(
+                        text: 'Service',
+                        color: Color(0xFF677294),
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+          Visibility(
+            visible: doctors.is_surgery == 1||doctors.is_surgery == "1",
+            child: Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Color(0xFFCBCBCB).withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(10.px),
+                      boxShadow: []),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomText(
+                        text: 'Cancer',
+                        color: Color(0xFF333333),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                      CustomText(
+                        text: 'Surgery',
+                        color: Color(0xFF677294),
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          Visibility(
+            visible: doctors.isEmergency == 1|| doctors.isEmergency == "1",
+            child: Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFCBCBCB).withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(10.px),
+                      boxShadow: []),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomText(
+                        text: '24 hour',
+                        color: Color(0xFF333333),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                      CustomText(
+                        text: 'Emergency',
+                        color: Color(0xFF677294),
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                      ),
+                    ],
+                  ),
+                )),
+          ),
         ],
       ),
     );
   }
 
-  Widget servicesWidget(){
+  Widget servicesWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomText(text: 'Services',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xFF333333),),
-          DesignConfig.space(h: 2.h),
-          Row(
-            children: [
-              CustomText(text: '1.',color: AppColors.primaryColor,fontWeight: FontWeight.w300,fontSize: 12,),
-              CustomText(text: 'Patient care should be the number one priority.',color: Color(0xFF677294),fontWeight: FontWeight.w400,fontSize: 12,),
-            ],
-          ),
-          DesignConfig.space(h: 1.h),
-          const Divider(
-            color: Color(0xFF6772941A),
-            thickness: 0.8,
-          ),
-          DesignConfig.space(h: 1.h),
-          Row(
-            children: [
-              CustomText(text: '2.',color: AppColors.primaryColor,fontWeight: FontWeight.w300,fontSize: 12,),
-              CustomText(text: 'If you run your practiceyou know how frustrating.',color: Color(0xFF677294),fontWeight: FontWeight.w400,fontSize: 12,),
-            ],
-          ),
-          DesignConfig.space(h: 1.h),
-          const Divider(
-            color: Color(0xFF6772941A),
-            thickness: 0.8,
-          ),
-          DesignConfig.space(h: 1.h),
-          Row(
-            children: [
-              CustomText(text: '3.',color: AppColors.primaryColor,fontWeight: FontWeight.w300,fontSize: 12,),
-              CustomText(text: 'That’s why some of appointment reminder system.',color: Color(0xFF677294),fontWeight: FontWeight.w400,fontSize: 12,),
-            ],
-          ),
-
-        ],
-      ),
+      child: CustomUi.htmlText(doctors.services.toString()),
     );
   }
+
   Widget locationWidget(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),

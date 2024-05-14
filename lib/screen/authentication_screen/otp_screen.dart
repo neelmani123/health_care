@@ -5,6 +5,8 @@ import 'package:health_care/common/app_bar.dart';
 import 'package:health_care/common/app_images.dart';
 import 'package:health_care/common/http_request.dart';
 import 'package:health_care/common/pref_manager.dart';
+import 'package:health_care/screen/authentication_screen/user_signup_screen.dart';
+import 'package:health_care/screen/profile_screen/profile_screen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
@@ -186,6 +188,7 @@ class _OtpScreenState extends State<OtpScreen> {
           PrefManager.clientUserDataSave(res);
           prefs.setString('user_token', res.token.toString());
           Get.offAll(const DashBoard());
+
         });
       }
       else
@@ -203,7 +206,16 @@ class _OtpScreenState extends State<OtpScreen> {
           Fluttertoast.showToast(msg: res.message.toString());
           PrefManager.userDataSave(res);
           prefs.setString('user_token', res.token.toString());
-          Get.offAll(const DashBoard());
+          if(res!.isSignup==1)
+          {
+            Get.to(UserSignUpScreen());
+
+          }
+          else
+          {
+            Get.offAll(const DashBoard());
+
+          }
         });
       }
       else

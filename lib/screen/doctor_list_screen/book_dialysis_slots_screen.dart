@@ -174,12 +174,11 @@ class _BookDialysisslotsScreenState extends State<BookDialysisslotsScreen> {
                           const Icon(Icons.heart_broken),
                         ],
                       ),
-                      CustomText(
-                        text: widget.bio.toString(),
-                        color: const Color(0xFF677294),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w300,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: widget.bio.toString().length>=100?CustomUi.htmlText(widget.bio.toString().substring(0,100)+"..."):CustomUi.htmlText(widget.bio.toString()),
                       ),
+
                     ],
                   )),
             ],

@@ -28,9 +28,11 @@ class DialysisCenter {
   var id;
   var name;
   var email;
+  var dialysisDetails;
   var phone;
   var address;
   var priority;
+  var is_wishlist;
   var status;
   var isDelete;
   var isOpen247;
@@ -53,7 +55,9 @@ class DialysisCenter {
         this.name,
         this.email,
         this.phone,
+        this.is_wishlist,
         this.address,
+        this.dialysisDetails,
         this.priority,
         this.status,
         this.isDelete,
@@ -77,8 +81,10 @@ class DialysisCenter {
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
+    dialysisDetails = json['dialysisDetails'];
     address = json['address'];
     priority = json['priority'];
+    is_wishlist = json['is_wishlist'];
     status = json['status'];
     isDelete = json['is_delete'];
     map_html = json['map_html'];
@@ -101,7 +107,9 @@ class DialysisCenter {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['is_wishlist'] = this.is_wishlist;
     data['email'] = this.email;
+    data['dialysisDetails'] = this.dialysisDetails;
     data['phone'] = this.phone;
     data['address'] = this.address;
     data['priority'] = this.priority;

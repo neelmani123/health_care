@@ -123,7 +123,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> with TickerProviderSt
   }
 
   Widget dialysisCentrreData() {
-    return ListView.builder(
+    return appointments.isEmpty?Center(child: CustomText(text: 'No data found..'),):ListView.builder(
         shrinkWrap: true,
         controller: _scrollController,
         itemCount: appointments.length,

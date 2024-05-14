@@ -27,7 +27,7 @@ class _SuccessfulAppointmentState extends State<SuccessfulAppointment> {
         children: [
           Center(child: SvgPicture.asset('assets/svg/successful.svg',height: 100,)),
           DesignConfig.space(h: 20),
-          CustomText(text: widget.sms.toString(),fontSize: 14,fontWeight: FontWeight.w500,),
+          CustomText(text: widget.sms.toString(),fontSize: 14,fontWeight: FontWeight.w500,align: TextAlign.center,),
           DesignConfig.space(h: 40),
           SizedBox(
             width: 200,

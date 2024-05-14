@@ -109,16 +109,19 @@ class _DialysisProductScreenState extends State<DialysisProductScreen> {
                         children: [
                           CustomText(text: products[index].name.toString(),color: const Color(0xFF3C3C3C),fontSize: 15,fontWeight: FontWeight.w400,),
                           DesignConfig.space(h: 1.h),
-                          Row(
-                            children: [
-                              DesignConfig.space(w: 1.w),
-                              CustomText(text: '\u{20B9}',color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
-                              DesignConfig.space(w: 0.5.w),
-                              CustomText(text: products[index].sellingPrice.toString()+" /-",color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
-                              DesignConfig.space(w: 1.w),
-                              CustomText(text: products[index].mrp.toString()+" /-",color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,linethrough: TextDecoration.lineThrough),
-                            ],
+                            Visibility(
+                              visible: products[index].sellingPrice.toString()!=""||products[index].mrp.toString()!="",
+                              child: Row(
+                              children: [
+                                DesignConfig.space(w: 1.w),
+                                CustomText(text: '\u{20B9}',color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
+                                DesignConfig.space(w: 0.5.w),
+                                CustomText(text: products[index].sellingPrice.toString()+" /-",color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,),
+                                DesignConfig.space(w: 1.w),
+                                CustomText(text: products[index].mrp.toString()+" /-",color: const Color(0xFF3C3C3C),fontSize: 10,fontWeight: FontWeight.w400,linethrough: TextDecoration.lineThrough),
+                              ],
                           ),
+                            ),
                           DesignConfig.space(h: 0.5.h),
 
                           Row(

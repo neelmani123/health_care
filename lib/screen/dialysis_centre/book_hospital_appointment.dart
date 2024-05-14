@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,7 +47,21 @@ class _BookHospitalAppointmentState extends State<BookHospitalAppointment> {
     dialysisCentreDetailsApi();
     super.initState();
   }
+  void wishApi(String id,String type)async{
+    var res=await httpServices.wishListApi(type: type,id: id);
+    if(res!.result==true)
+    {
+      setState(() {
+        Fluttertoast.showToast(msg: res.message.toString());
+        dialysisCentreDetailsApi();
 
+      });
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: res.message.toString());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +160,11 @@ class _BookHospitalAppointmentState extends State<BookHospitalAppointment> {
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
-                          const Icon(Icons.heart_broken),
+                          InkWell(
+                              onTap: (){
+                                wishApi(dialysisDetails.id.toString(),"hospital");
+                              },
+                              child: dialysisDetails.is_wishlist==1||dialysisDetails.is_wishlist=="1"?SvgPicture.asset('assets/svg/heart.svg'):SvgPicture.asset('assets/svg/like.svg')),
                         ],
                       ),
                       CustomText(
@@ -214,7 +233,7 @@ class _BookHospitalAppointmentState extends State<BookHospitalAppointment> {
         children: [
           Expanded(
               child: Visibility(
-            visible: dialysisDetails.isOpen247 == 1,
+            visible: dialysisDetails.isOpen247 == 1||dialysisDetails.isOpen247 == "1",
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -243,7 +262,7 @@ class _BookHospitalAppointmentState extends State<BookHospitalAppointment> {
             ),
           )),
           Visibility(
-            visible: dialysisDetails.is_surgery == 1,
+            visible: dialysisDetails.is_surgery == 1||dialysisDetails.is_surgery == "1",
             child: Expanded(
                 child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -273,7 +292,7 @@ class _BookHospitalAppointmentState extends State<BookHospitalAppointment> {
             )),
           ),
           Visibility(
-            visible: dialysisDetails.isEmergency == 1,
+            visible: dialysisDetails.isEmergency == 1|| dialysisDetails.isEmergency == "1",
             child: Expanded(
                 child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

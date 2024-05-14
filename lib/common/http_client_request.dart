@@ -5,6 +5,7 @@ import 'package:health_care/models/blogs_model/blogs_model.dart';
 import 'package:health_care/models/dialysis_settings_model/dialysis_settings_model.dart';
 import 'package:health_care/models/generate_qr/generate_qr_model.dart';
 import 'package:health_care/models/home_model/home_model.dart';
+import 'package:health_care/models/notification_model/notification_list_model.dart';
 import 'package:health_care/models/profile_model/profile_model.dart';
 import 'package:health_care/models/profile_model/settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -203,6 +204,17 @@ class HttpClientServices {
     final response = await helper.postBearerApi('patient_details', reqBody);
     try {
       return PatientDetailsModel.fromJson(response);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+
+  Future<NotificationListModel?> notificationApi() async {
+    Map<String, dynamic> reqBody = {};
+    final response = await helper.postBearerApi('notification_list', reqBody);
+    try {
+      return NotificationListModel.fromJson(response);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }

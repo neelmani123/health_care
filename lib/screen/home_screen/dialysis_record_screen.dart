@@ -109,17 +109,17 @@ class _DialysisRecordScreenState extends State<DialysisRecordScreen>with TickerP
               });
             } else if (val == 1) {
               setState(() {
-                usePrescriptionApi("Report");
+                usePrescriptionApi("reports");
               });
             } else if (val == 2) {
               setState(() {
-                usePrescriptionApi("medical_records");
+                usePrescriptionApi("dialysis_records");
 
 
               });
             }
           },
-          isScrollable: false,
+          isScrollable: true,
           controller: tabController,
           tabs: const [
             Tab(
@@ -177,7 +177,7 @@ class _DialysisRecordScreenState extends State<DialysisRecordScreen>with TickerP
                                   color: AppColors.primaryColor,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: CustomText(text: "27\nFEB",color: AppColors.whiteColor,align: TextAlign.center,),
+                                child: CustomText(text: prescriptions[index].date.toString(),color: AppColors.whiteColor,align: TextAlign.center,),
                               ),
                               Container(
                                 height: 30 ,

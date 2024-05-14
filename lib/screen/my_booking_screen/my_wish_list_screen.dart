@@ -54,13 +54,13 @@ class _MyWishListScreenState extends State<MyWishListScreen>with TickerProviderS
   @override
   void initState() {
     // TODO: implement initState
-    tabController = TabController(length: 2, vsync: this);
-    wishListApi('hospital');
+    tabController = TabController(length: 3, vsync: this);
+    wishListApi('doctor');
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(length: 2, child: Scaffold(
+    return DefaultTabController(length: 3, child: Scaffold(
       appBar: DesignConfig.appBar(
         context,
         double.infinity,
@@ -73,13 +73,21 @@ class _MyWishListScreenState extends State<MyWishListScreen>with TickerProviderS
                 if(val==0)
                 {
                   setState(() {
-                    wishListApi('hospital');
-                    type="hospital";
+                    wishListApi('doctor');
+                    type="doctor";
                   });
 
 
                 }
                 else if(val==1)
+                {
+                  setState(() {
+                    wishListApi('hospital');
+                    type="hospital";
+                  });
+
+                }
+                else if(val==2)
                 {
                   setState(() {
                     wishListApi('product');
@@ -92,6 +100,9 @@ class _MyWishListScreenState extends State<MyWishListScreen>with TickerProviderS
               controller: tabController, tabs: const [
             Tab(
               text: 'Doctor',
+            ),
+            Tab(
+              text: 'Hospital',
             ),
             Tab(
               text: 'Product',
@@ -153,7 +164,7 @@ class _MyWishListScreenState extends State<MyWishListScreen>with TickerProviderS
                                   wishApi(wishlists[index].typeId.toString(),type.toString());
                                 }, icon: SvgPicture.asset('assets/svg/heart.svg'))
                           ),
-                          CustomText(text: wishlists[index].hospitalName.toString(),color: const Color(0xFF3C3C3C),fontSize: 15,fontWeight: FontWeight.w400,),
+                          CustomText(text: wishlists[index].name.toString(),color: const Color(0xFF3C3C3C),fontSize: 15,fontWeight: FontWeight.w400,),
                           DesignConfig.space(h: 1.h),
                           Row(
                             children: [

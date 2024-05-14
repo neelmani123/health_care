@@ -19,32 +19,34 @@ class _BlogsDetailsState extends State<BlogsDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DesignConfig.appBar(context, double.infinity, 'Blogs'),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          DesignConfig.space(h: 1.h),
-          Container(
-            height: 25.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: NetworkImage(widget.image.toString()),fit: BoxFit.cover),
-                borderRadius: BorderRadius.circular(6)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-            child: CustomText(
-              text: widget.text.toString(),
-              color: const Color(0xFF7C7C7C),
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            DesignConfig.space(h: 1.h),
+            Container(
+              height: 25.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: NetworkImage(widget.image.toString()),fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(6)),
             ),
-          ),
-          Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-            child: CustomUi.htmlText(widget.description.toString())
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              child: CustomText(
+                text: widget.text.toString(),
+                color: const Color(0xFF7C7C7C),
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              child: CustomUi.htmlText(widget.description.toString())
+            ),
+          ],
+        ),
       ),
     );
   }

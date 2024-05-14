@@ -38,6 +38,7 @@ class Wishlists {
   var createdAt;
   var updatedAt;
   var hospitalName;
+  var name;
   var doctorName;
   var image;
   var productName;
@@ -48,6 +49,7 @@ class Wishlists {
         this.typeId,
         this.userId,
         this.createdAt,
+        this.name,
         this.updatedAt,
         this.image,
         this.hospitalName,
@@ -60,6 +62,7 @@ class Wishlists {
     typeId = json['type_id'];
     userId = json['user_id'];
     image = json['image'];
+    name = json['name'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     hospitalName = json['hospital_name'];
@@ -74,6 +77,7 @@ class Wishlists {
     data['type_id'] = this.typeId;
     data['user_id'] = this.userId;
     data['image'] = this.image;
+    data['name'] = this.name;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['hospital_name'] = this.hospitalName;

@@ -53,12 +53,14 @@ class _BookAppointmnetSummaryScreenState extends State<BookAppointmnetSummaryScr
         }, 11,
             AppColors.primaryColor, AppColors.whiteColor, 14, false),
       ),
-      body: Column(
-        children: [
-          hospitalDetails(),
-          DesignConfig.space(h: 1.h),
-          appointmentSlotsWidget(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            hospitalDetails(),
+            DesignConfig.space(h: 1.h),
+            appointmentSlotsWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -111,7 +113,11 @@ class _BookAppointmnetSummaryScreenState extends State<BookAppointmnetSummaryScr
                           const Icon(Icons.heart_broken),
                         ],
                       ),
-                      CustomUi.htmlText(widget.bio.toString())
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: widget.bio.toString().length>=100?CustomUi.htmlText(widget.bio.toString().substring(0,100)+"..."):CustomUi.htmlText(widget.bio.toString()),
+                      ),
+
                     ],
                   )),
             ],

@@ -57,17 +57,17 @@ class Products {
         this.updatedAt});
 
   Products.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    image = json['image'];
-    mrp = json['mrp'];
-    ratings = json['ratings'];
-    is_wishlist = json['is_wishlist'];
-    sellingPrice = json['selling_price'];
-    description = json['description'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    id = json['id']??"";
+    name = json['name']??"";
+    image = json['image']??"";
+    mrp = json['mrp']??"";
+    ratings = json['ratings']??"";
+    is_wishlist = json['is_wishlist']??"";
+    sellingPrice = json['selling_price']??"";
+    description = json['description']??"";
+    status = json['status']??"";
+    createdAt = json['created_at']??"";
+    updatedAt = json['updated_at']??"";
   }
 
   Map<String, dynamic> toJson() {

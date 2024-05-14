@@ -18,6 +18,7 @@ import '../../models/signup_model/sign_up_model.dart';
 import 'package:get/get.dart';
 
 class UserSignUpScreen extends StatefulWidget {
+
   const UserSignUpScreen({super.key});
 
   @override
@@ -55,6 +56,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen> {
         state.text=res.user!.stateId.toString();
         city.text=res.user!.cityId.toString();
         emailId.text=res.user!.email.toString();
+        mobile.text=res.user!.phone.toString();
       });
     } else {
       Fluttertoast.showToast(msg: res.message.toString());
@@ -103,15 +105,18 @@ class _UserSignUpScreenState extends State<UserSignUpScreen> {
     else
     {
       print('hjdfhdjhfhd'+path);
-      // request.files.add(http.MultipartFile.fromBytes(
-      //     'image', File(path).readAsBytesSync(),
-      //     filename: path.toString().split('/').last));
+      request.files.add(http.MultipartFile.fromBytes(
+          'image', File(path).readAsBytesSync(),
+          filename: path.toString().split('/').last));
     }
     try {
       debugPrint(jsonEncode("REquest=====>"+request.fields.toString()));
+      debugPrint(jsonEncode("REquest=====>"+request.files.toString()));
       http.Response response =
       await http.Response.fromStream(await request.send());
       if (response.statusCode == 200) {
+        print("ghjdjjdjgjdfjdjg========.............>");
+        profileApi();
         Get.to(SignUpScrren1());
       } else {
         print("Error========+++>"+response.body.toString());

@@ -45,6 +45,7 @@ class DailysisRecordPrescriptions {
   var addedBy;
   var status;
   var createdAt;
+  var date;
   var updatedAt;
 
   DailysisRecordPrescriptions(
@@ -52,6 +53,7 @@ class DailysisRecordPrescriptions {
         this.userId,
         this.file,
         this.title,
+        this.date,
         this.fileType,
         this.type,
         this.text,
@@ -63,19 +65,20 @@ class DailysisRecordPrescriptions {
         this.updatedAt});
 
   DailysisRecordPrescriptions.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    file = json['file'];
-    title = json['title'];
-    fileType = json['file_type'];
-    type = json['type'];
-    text = json['text'];
-    doctorId = json['doctor_id'];
-    hospitalId = json['hospital_id'];
-    addedBy = json['added_by'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    id = json['id']??"";
+    userId = json['user_id']??"";
+    file = json['file']??"";
+    title = json['title']??"";
+    fileType = json['file_type']??"";
+    date = json['date']??"";
+    type = json['type']??"";
+    text = json['text']??"";
+    doctorId = json['doctor_id']??"";
+    hospitalId = json['hospital_id']??"";
+    addedBy = json['added_by']??"";
+    status = json['status']??"";
+    createdAt = json['created_at']??"";
+    updatedAt = json['updated_at']??"";
   }
 
   Map<String, dynamic> toJson() {
@@ -84,6 +87,7 @@ class DailysisRecordPrescriptions {
     data['user_id'] = this.userId;
     data['file'] = this.file;
     data['title'] = this.title;
+    data['date'] = this.date;
     data['file_type'] = this.fileType;
     data['type'] = this.type;
     data['text'] = this.text;
